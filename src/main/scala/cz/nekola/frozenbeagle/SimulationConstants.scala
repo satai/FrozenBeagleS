@@ -1,5 +1,7 @@
 package cz.nekola.frozenbeagle
 
-class SimulationConstants {
+object SimulationConstants {
+  val dimensionCount: Int = 4
 
+  val zeroPhenotypeVec: List[Double] = List.fill(dimensionCount) (0.0)
 }

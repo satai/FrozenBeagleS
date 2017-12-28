@@ -2,6 +2,8 @@ package cz.nekola.frozenbeagle
 
 import java.lang.Math.sqrt
 
+import cz.nekola.frozenbeagle.SimulationConstants.zeroPhenotypeVec
+
 case class Phenotype(components: List[Double]) {
   def distance(that: Phenotype) =
       sqrt( (this.components, that.components)
@@ -10,5 +12,9 @@ case class Phenotype(components: List[Double]) {
              .map((x) => x * x)
              .sum)
 
-  override def toString = this.components.mkString("(",", ", ")")
+  override def toString = this.components.mkString("(", ", ", ")")
+}
+
+object Phenotype {
+  val zeroPhenotype = Phenotype (zeroPhenotypeVec)
 }
