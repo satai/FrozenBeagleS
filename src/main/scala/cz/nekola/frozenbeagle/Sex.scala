@@ -1,5 +1,9 @@
 package cz.nekola.frozenbeagle
 
-class Sex extends Enumeration {
-  val F, M = Value
-}
+sealed abstract class Sex
+
+class F extends Sex
+object F
+
+class M extends Sex
+object M
