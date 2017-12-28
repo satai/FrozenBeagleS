@@ -20,6 +20,7 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
     implicit lazy val arbConsumer:Arbitrary[Phenotype] = Arbitrary(genPhenotype)
 
     describe("Phenotype") {
+
         describe("Distance") {
             it("is euklidean one by example") {
                 Phenotype(List(-1.0, 0.0, 0.0, 0.0)) distance Phenotype(List(0.0, 1.0, 0.0, 0.0)) should
@@ -40,5 +41,14 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
                 }
             }
         }
+
+      describe("string representation") {
+        it ("looks like (1.0, 2.0, -0.3)") {
+         "(1.0, 2.0, -0.3)"  should equal(
+           Phenotype(List(1.0, 2.0, -0.3)).toString
+         )
+        }
+
+      }
     }
 }

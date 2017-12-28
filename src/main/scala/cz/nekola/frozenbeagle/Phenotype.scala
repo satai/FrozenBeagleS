@@ -9,4 +9,6 @@ case class Phenotype(components: List[Double]) {
              .map((x, y) => x - y)
              .map((x) => x * x)
              .sum)
+
+  override def toString = this.components.mkString("(",", ", ")")
 }
