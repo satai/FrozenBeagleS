@@ -2,6 +2,7 @@ package cz.nekola.frozenbeagle
 
 import java.lang.Math.sqrt
 
+import cz.nekola.frozenbeagle.Phenotype.fitness
 import cz.nekola.frozenbeagle.SimulationConstants.dimensionCount
 import org.scalatest._
 import org.scalatest.prop.Checkers
@@ -59,11 +60,25 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
     describe("zero phenotype") {
       it("contains zeroes only") {
-        Phenotype.zeroPhenotype.components.forall(0.0 ==) should be (true)
+        Phenotype.zeroPhenotype.components.forall(0.0 ==) should be(true)
       }
 
       it("has the dimension equal dimensionCount") {
-        Phenotype.zeroPhenotype.components.length should be (dimensionCount)
+        Phenotype.zeroPhenotype.components.length should be(dimensionCount)
+      }
+    }
+
+    describe("fitness") {
+      it("increasing distance to the optimum decreases fitness and via versa") {
+        check {
+          (optimum: Phenotype, p1: Phenotype, p2: Phenotype) =>
+            (((fitness(optimum)(p1) ==  0.0) && (fitness(optimum)(p2) == 0.0) &&
+             ((optimum distance p1) > 100.0) && ((optimum distance p2) > 100.0)) //FIXME
+            ) || (
+              ((optimum distance p1) compare fitness(optimum)(p2)) ==
+              ((optimum distance p2) compare fitness(optimum)(p1))
+            )
+        }
       }
     }
   }

@@ -1,11 +1,11 @@
 package cz.nekola.frozenbeagle
 
-import java.lang.Math.sqrt
+import java.lang.Math.{exp, sqrt}
 
-import cz.nekola.frozenbeagle.SimulationConstants.zeroPhenotypeVec
+import cz.nekola.frozenbeagle.SimulationConstants.{fitnessDecreaseCoefficient, zeroPhenotypeVec}
 
 case class Phenotype(components: List[Double]) {
-  def distance(that: Phenotype) =
+  def distance(that: Phenotype): Double =
       sqrt( (this.components, that.components)
              .zipped
              .map((x, y) => x - y)
@@ -17,4 +17,9 @@ case class Phenotype(components: List[Double]) {
 
 object Phenotype {
   val zeroPhenotype = Phenotype (zeroPhenotypeVec)
+
+  def fitness(optimum: Phenotype)(phenotype: Phenotype): Double = {
+    val d = phenotype distance optimum
+    exp(fitnessDecreaseCoefficient * d * d)
+  }
 }
