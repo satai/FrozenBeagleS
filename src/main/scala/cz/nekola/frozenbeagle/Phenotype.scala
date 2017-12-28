@@ -8,5 +8,5 @@ case class Phenotype(components: List[Double]) {
              .zipped
              .map((x, y) => x - y)
              .map((x) => x * x)
-             .sum )
+             .sum)
 }

@@ -5,10 +5,20 @@ import java.lang.Math.sqrt
 import org.scalatest._
 import org.scalatest.prop.Checkers
 import org.scalacheck.Arbitrary._
-import org.scalacheck.Prop
+import org.scalacheck.{Arbitrary, Gen}
 
 
 class PhenotypeSpec extends FunSpec with Matchers with Checkers {
+
+    lazy val genPhenotype:Gen[Phenotype] = for {
+        x1 <- arbitrary[Double]
+        x2 <- arbitrary[Double]
+        x3 <- arbitrary[Double]
+        x4 <- arbitrary[Double]
+    } yield Phenotype(List(x1, x2, x3, x4))
+
+    implicit lazy val arbConsumer:Arbitrary[Phenotype] = Arbitrary(genPhenotype)
+
     describe("Phenotype") {
         describe("Distance") {
             it("is euklidean one by example") {
@@ -18,9 +28,15 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
             it("distance of a phenotype to itself is zero") {
                 check {
-                    (x1: Double, x2 : Double, x3: Double, x4 : Double) =>
-                        val p1 = Phenotype(List(x1, x2, x3, x4))
-                        0.0 == (p1 distance p1)
+                    (p: Phenotype) =>
+                        0.0 == (p distance p)
+                }
+            }
+
+            it("distance of a phenotypes is greater or equals than zero") {
+                check {
+                    (p1: Phenotype, p2: Phenotype) =>
+                        0.0 <= (p1 distance p2)
                 }
             }
         }
