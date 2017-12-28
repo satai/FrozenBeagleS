@@ -2,11 +2,11 @@ package cz.nekola.frozenbeagle
 
 import java.lang.Math.sqrt
 
+import cz.nekola.frozenbeagle.SimulationConstants.dimensionCount
 import org.scalatest._
 import org.scalatest.prop.Checkers
 import org.scalacheck.Arbitrary._
 import org.scalacheck.{Arbitrary, Gen}
-
 
 class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
@@ -37,6 +37,13 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
       it("distance of a phenotypes is greater or equals than zero") {
         check {
           (p1: Phenotype, p2: Phenotype) =>
+            (p1 distance p2) == (p2 distance p1)
+        }
+      }
+
+      it("distance of a phenotypes is symetric") {
+        check {
+          (p1: Phenotype, p2: Phenotype) =>
             0.0 <= (p1 distance p2)
         }
       }
@@ -48,7 +55,16 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
           Phenotype(List(1.0, 2.0, -0.3)).toString
         )
       }
+    }
 
+    describe("zero phenotype") {
+      it("contains zeroes only") {
+        Phenotype.zeroPhenotype.components.forall(0.0 ==) should be (true)
+      }
+
+      it("has the dimension equal dimensionCount") {
+        Phenotype.zeroPhenotype.components.length should be (dimensionCount)
+      }
     }
   }
 }
