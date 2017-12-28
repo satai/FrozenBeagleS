@@ -22,7 +22,7 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
     describe("Phenotype") {
 
         describe("Distance") {
-            it("is euklidean one by example") {
+            it("is euclidean one by example") {
                 Phenotype(List(-1.0, 0.0, 0.0, 0.0)) distance Phenotype(List(0.0, 1.0, 0.0, 0.0)) should
                     equal(sqrt(2))
             }
