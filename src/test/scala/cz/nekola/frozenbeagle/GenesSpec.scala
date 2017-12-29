@@ -7,7 +7,7 @@ import scala.collection.immutable.List
 
 class GenesSpec extends FunSpec with Matchers with Checkers {
   describe("Alleles") {
-    it("Allele has sane text representation like {FIXME}") {
+    it("Allele has sane text representation like '{Δ(0.0, 1.0, 2.0, -3.4)|Δ(0.0, 0.0, 0.0, 11.1)}'") {
       Allelle(
         PhenotypeChange (List(0, 1, 2, -3.4)),
         PhenotypeChange (List(0, 0, 0, 11.1))
@@ -16,7 +16,7 @@ class GenesSpec extends FunSpec with Matchers with Checkers {
   }
 
   describe("Dna") {
-    it("has sane text representation") {
+    it("has sane text representation like '[{Δ(1.1, 1.2)|Δ(-1.2, 0.3)}, {Δ(-1.2, 0.3)|Δ(-0.2, 0.3)}]'") {
         DnaString (List ( Allelle(PhenotypeChange(List(1.1, 1.2)), PhenotypeChange(List(-1.2, 0.3)))
                         , Allelle(PhenotypeChange(List(-1.2, 0.3)), PhenotypeChange(List(-0.2, 0.3)))
                         )).toString should be("[{Δ(1.1, 1.2)|Δ(-1.2, 0.3)}, {Δ(-1.2, 0.3)|Δ(-0.2, 0.3)}]")
