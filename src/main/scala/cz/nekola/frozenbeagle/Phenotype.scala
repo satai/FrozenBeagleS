@@ -2,6 +2,7 @@ package cz.nekola.frozenbeagle
 
 import java.lang.Math.{exp, sqrt}
 
+import cz.nekola.frozenbeagle.PhenotypeChange.randomPhenotypeChange
 import cz.nekola.frozenbeagle.SimulationConstants.{dimensionCount, fitnessDecreaseCoefficient, zeroPhenotypeVec}
 
 import scala.util.Random
@@ -18,6 +19,14 @@ case class Phenotype(components: List[Double]) {
 }
 
 case class PhenotypeChange(components: List[Double]) {
+  def mutate: PhenotypeChange = {
+    if (Random.nextDouble() < 0.01) { //FIXME
+      randomPhenotypeChange
+    } else {
+      this
+    }
+  }
+
   override def toString = this.components.mkString("Δ(", ", ", ")")
 }
 
