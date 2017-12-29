@@ -1,9 +1,12 @@
 package cz.nekola.frozenbeagle
 
+import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.prop.Checkers
 import org.scalatest.{Matchers, _}
 
 import scala.collection.immutable.List
+
+import Generators._
 
 class GenesSpec extends FunSpec with Matchers with Checkers {
   describe("Alleles") {
@@ -22,5 +25,6 @@ class GenesSpec extends FunSpec with Matchers with Checkers {
                         )).toString should be("[{Δ(1.1, 1.2)|Δ(-1.2, 0.3)}, {Δ(-1.2, 0.3)|Δ(-0.2, 0.3)}]")
 
     }
+
   }
 }

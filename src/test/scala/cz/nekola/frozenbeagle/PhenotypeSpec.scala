@@ -6,21 +6,13 @@ import cz.nekola.frozenbeagle.Phenotype.fitness
 import cz.nekola.frozenbeagle.SimulationConstants.dimensionCount
 import org.scalatest._
 import org.scalatest.prop.Checkers
-import org.scalacheck.Arbitrary._
-import org.scalacheck.{Arbitrary, Gen}
 import smile.stat.distribution.{GaussianDistribution}
 import smile.stat.hypothesis.KSTest
 
+import Generators._
+
 class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
-  lazy val genPhenotype: Gen[Phenotype] = for {
-    x1 <- arbitrary[Double]
-    x2 <- arbitrary[Double]
-    x3 <- arbitrary[Double]
-    x4 <- arbitrary[Double]
-  } yield Phenotype(List(x1, x2, x3, x4))
-
-  implicit lazy val arbConsumer: Arbitrary[Phenotype] = Arbitrary(genPhenotype)
 
   describe("Phenotypes and their changes") {
 

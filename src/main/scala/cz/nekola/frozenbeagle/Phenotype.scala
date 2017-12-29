@@ -24,7 +24,6 @@ case class PhenotypeChange(components: List[Double]) {
 object Phenotype {
   val zeroPhenotype = Phenotype (zeroPhenotypeVec)
 
-
   def fitness(optimum: Phenotype)(phenotype: Phenotype): Double = {
     val d = phenotype distance optimum
     exp(fitnessDecreaseCoefficient * d * d)
