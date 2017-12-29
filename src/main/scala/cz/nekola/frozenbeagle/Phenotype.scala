@@ -17,13 +17,20 @@ case class Phenotype(components: List[Double]) {
   override def toString = this.components.mkString("(", ", ", ")")
 }
 
+case class PhenotypeChange(components: List[Double]) {
+  override def toString = this.components.mkString("Δ(", ", ", ")")
+}
+
 object Phenotype {
   val zeroPhenotype = Phenotype (zeroPhenotypeVec)
 
-  def randomPhenotype = Phenotype ((1 to dimensionCount).map(_ => Random.nextGaussian()).toList)
 
   def fitness(optimum: Phenotype)(phenotype: Phenotype): Double = {
     val d = phenotype distance optimum
     exp(fitnessDecreaseCoefficient * d * d)
   }
+}
+
+object PhenotypeChange {
+  def randomPhenotypeChange = PhenotypeChange ((1 to dimensionCount).map(_ => Random.nextGaussian()).toList)
 }

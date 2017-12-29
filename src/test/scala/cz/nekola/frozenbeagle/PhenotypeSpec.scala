@@ -22,7 +22,7 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
   implicit lazy val arbConsumer: Arbitrary[Phenotype] = Arbitrary(genPhenotype)
 
-  describe("Phenotype") {
+  describe("Phenotypes and their changes") {
 
     describe("Distance") {
       it("is euclidean one by example") {
@@ -60,13 +60,13 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
       }
     }
 
-    describe("random phenotype") {
+    describe("random phenotype change") {
       it("random phenotypes length is dimensionCount") {
-        Phenotype.randomPhenotype.components.length should be(dimensionCount)
+        PhenotypeChange.randomPhenotypeChange.components.length should be(dimensionCount)
       }
 
-      it("random phenotypes components are in normal distribution") {
-        val someValues = (1 to 10000).flatMap { _ => Phenotype.randomPhenotype.components }
+      it("random phenotypes change components are in normal distribution") {
+        val someValues = (1 to 10000).flatMap { _ => PhenotypeChange.randomPhenotypeChange.components }
 
         (KSTest.test(someValues.toArray, GaussianDistribution.getInstance()).d < 0.01) should be (true)
       }

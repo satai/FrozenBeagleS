@@ -1,7 +1,7 @@
 package cz.nekola.frozenbeagle
 
-case class Allelle ( effect: Phenotype
-                    , dominantEffect: Phenotype
+case class Allelle ( effect: PhenotypeChange
+                    , dominantEffect: PhenotypeChange
                     ) {
 
   override def toString = "{" ++ effect.toString ++ "|" ++ dominantEffect.toString ++ "}"
