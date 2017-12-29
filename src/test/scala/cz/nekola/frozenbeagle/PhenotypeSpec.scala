@@ -8,6 +8,8 @@ import org.scalatest._
 import org.scalatest.prop.Checkers
 import org.scalacheck.Arbitrary._
 import org.scalacheck.{Arbitrary, Gen}
+import smile.stat.distribution.{GaussianDistribution}
+import smile.stat.hypothesis.KSTest
 
 class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
@@ -35,14 +37,14 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
         }
       }
 
-      it("distance of a phenotypes is greater or equals than zero") {
+      it("distance of a phenotypes is symmetric") {
         check {
           (p1: Phenotype, p2: Phenotype) =>
             (p1 distance p2) == (p2 distance p1)
         }
       }
 
-      it("distance of a phenotypes is symetric") {
+      it("distance of a phenotypes is greater or equals than zero") {
         check {
           (p1: Phenotype, p2: Phenotype) =>
             0.0 <= (p1 distance p2)
@@ -55,6 +57,18 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
         "(1.0, 2.0, -0.3)" should equal(
           Phenotype(List(1.0, 2.0, -0.3)).toString
         )
+      }
+    }
+
+    describe("random phenotype") {
+      it("random phenotypes length is dimensionCount") {
+        Phenotype.randomPhenotype.components.length should be(dimensionCount)
+      }
+
+      it("random phenotypes components are in normal distribution") {
+        val someValues = (1 to 10000).flatMap { _ => Phenotype.randomPhenotype.components }
+
+        (KSTest.test(someValues.toArray, GaussianDistribution.getInstance()).d < 0.01) should be (true)
       }
     }
 
