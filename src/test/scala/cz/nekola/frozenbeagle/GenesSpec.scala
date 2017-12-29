@@ -15,7 +15,7 @@ class GenesSpec extends FunSpec with Matchers with Checkers {
     }
   }
 
-  describe("Dna") {
+  describe("DNA") {
     it("has sane text representation like '[{Δ(1.1, 1.2)|Δ(-1.2, 0.3)}, {Δ(-1.2, 0.3)|Δ(-0.2, 0.3)}]'") {
         DnaString (List ( Allelle(PhenotypeChange(List(1.1, 1.2)), PhenotypeChange(List(-1.2, 0.3)))
                         , Allelle(PhenotypeChange(List(-1.2, 0.3)), PhenotypeChange(List(-0.2, 0.3)))
