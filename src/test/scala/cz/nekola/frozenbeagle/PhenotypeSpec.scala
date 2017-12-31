@@ -79,7 +79,7 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
       }
 
       it("random phenotypes change components are in normal distribution") {
-        val someValues = (1 to 10000).flatMap { _ => PhenotypeChange.randomPhenotypeChangeWithOneNonZero.components }
+        val someValues = (1 to 40000).flatMap { _ => PhenotypeChange.randomPhenotypeChangeWithOneNonZero.components }
                                      .filter(_ != 0.0)
 
         (KSTest.test(someValues.toArray, GaussianDistribution.getInstance()).d < 0.01) should be (true)
