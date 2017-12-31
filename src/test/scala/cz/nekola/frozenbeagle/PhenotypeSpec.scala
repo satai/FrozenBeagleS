@@ -22,6 +22,11 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
           equal(sqrt(2))
       }
 
+      it("is euclidean one by an other example") {
+        Phenotype(List(2.0, 0.0, 0.0, 0.0)) distance Phenotype(List(0.0, 2.0, 2.0, -2.0)) should
+          equal(4)
+      }
+
       it("distance of a phenotype to itself is zero") {
         check {
           (p: Phenotype) =>
