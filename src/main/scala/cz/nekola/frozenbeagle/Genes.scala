@@ -1,11 +1,24 @@
 package cz.nekola.frozenbeagle
 
+import cz.nekola.frozenbeagle.PhenotypeChange.randomPhenotypeChange
+
+import scala.util.Random
+
 case class Allelle ( effect: PhenotypeChange
                     , dominantEffect: PhenotypeChange
                     ) {
-  def mutate: Allelle = Allelle (this.effect.mutate, this.dominantEffect.mutate)
+  def mutate: Allelle =
+    if (Random.nextDouble() < 0.0002) { //FIXME
+        randomAllelle
+    } else {
+        this
+    }
 
-  override def toString = "{" ++ effect.toString ++ "|" ++ dominantEffect.toString ++ "}"
+    def randomAllelle = {
+        Allelle(randomPhenotypeChange, randomPhenotypeChange) //FIXME
+    }
+
+    override def toString = "{" ++ effect.toString ++ "|" ++ dominantEffect.toString ++ "}"
 }
 
 case class DnaString (genes: List[Allelle]) {

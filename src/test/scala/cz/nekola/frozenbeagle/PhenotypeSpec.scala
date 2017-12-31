@@ -69,6 +69,23 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
       }
     }
 
+    describe("random phenotype change with one non zero") {
+      it("its length is dimensionCount") {
+        PhenotypeChange.randomPhenotypeChangeWithOneNonZero.components.length should be(dimensionCount)
+      }
+
+      it("its has one non-zero value") {
+        PhenotypeChange.randomPhenotypeChangeWithOneNonZero.components.count(_ != 0.0) should be(1)
+      }
+
+      it("random phenotypes change components are in normal distribution") {
+        val someValues = (1 to 10000).flatMap { _ => PhenotypeChange.randomPhenotypeChangeWithOneNonZero.components }
+                                     .filter(_ != 0.0)
+
+        (KSTest.test(someValues.toArray, GaussianDistribution.getInstance()).d < 0.01) should be (true)
+      }
+    }
+
     describe("zero phenotype") {
       it("contains zeroes only") {
         Phenotype.zeroPhenotype.components.forall(0.0 ==) should be(true)

@@ -19,13 +19,6 @@ case class Phenotype(components: List[Double]) {
 }
 
 case class PhenotypeChange(components: List[Double]) {
-  def mutate: PhenotypeChange = {
-    if (Random.nextDouble() < 0.01) { //FIXME
-      randomPhenotypeChange
-    } else {
-      this
-    }
-  }
 
   override def toString = this.components.mkString("Δ(", ", ", ")")
 }
@@ -41,4 +34,9 @@ object Phenotype {
 
 object PhenotypeChange {
   def randomPhenotypeChange = PhenotypeChange ((1 to dimensionCount).map(_ => Random.nextGaussian()).toList)
+
+    def randomPhenotypeChangeWithOneNonZero = {
+        val cs : List[Double] = (Random.nextGaussian()) :: (for { _ <- (1 until dimensionCount) } yield 0.0).toList
+        PhenotypeChange (Random.shuffle(cs))
+  }
 }
