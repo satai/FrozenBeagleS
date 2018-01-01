@@ -1,9 +1,7 @@
 package cz.nekola.frozenbeagle
 
-sealed abstract class Sex
+sealed trait Sex
 
-class F extends Sex
-object F
+case object F extends Sex
+case object M extends Sex
 
-class M extends Sex
-object M
