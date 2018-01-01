@@ -45,5 +45,31 @@ class GenesSpec extends FunSpec with Matchers with Checkers {
 
       (dnas.toSet.diff(mutated.toSet).size < 3000) should be(true)
     }
+
+    it ("DNA after crossover has the same length as original DNAs") {
+      check {
+        (dna1: DnaString, dna2: DnaString) =>
+          DnaString.crossover(dna1, dna2).genes.length == dna1.genes.length
+      }
+    }
+
+    it ("DNA after crossover has the same beginning as the first DNA") {
+      check {
+        (dna1: DnaString, dna2: DnaString) =>
+          DnaString.crossoverWithPoint(2,dna1, dna2).genes.take(2) == dna1.genes.take(2)
+      }
+    }
+
+    it ("DNA after crossover has the same ending as the second DNA") {
+      check {
+        (dna1: DnaString, dna2: DnaString) =>
+          DnaString.crossoverWithPoint(2,dna1, dna2).genes.drop(2) == dna2.genes.drop(2)
+      }
+    }
+
+    it ("randomPoint can be in any point in between ") {
+      (1 to 10000).map{_ => genDnaString.sample.get.randomPoint}.toSet should equal ((1 to 3).toSet)  //FIXME
+    }
+
   }
 }
