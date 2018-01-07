@@ -8,3 +8,10 @@ case class Population( generation: Int
 
 }
 
+trait PopulationChange  {
+  def apply(individuals: Set[Individual]): Set[Individual]
+}
+
+object AllSurvive extends PopulationChange {
+  override def apply(individuals: Set[Individual]): Set[Individual] = individuals
+}

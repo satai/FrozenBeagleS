@@ -28,5 +28,14 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
          p.females.forall{_.sex == F} && p.males.forall{_.sex == M}
      }
     }
+
+    describe("all survive selection") {
+      it ("doesn't change the population") {
+        check {
+          (p: Population) =>
+            AllSurvive(p.individuals) == p.individuals
+        }
+      }
+    }
   }
 }
