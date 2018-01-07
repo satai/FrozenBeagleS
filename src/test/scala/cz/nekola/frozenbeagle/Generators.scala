@@ -55,4 +55,10 @@ object Generators {
 
   implicit lazy val arbIndividual: Arbitrary[Individual] = Arbitrary(genIndividual)
 
+  lazy val genPopulation: Gen[Population] = for {
+    individuals <- arbitrary[Set[Individual]]
+    generation <- Gen.choose(0,100)
+  } yield Population(generation, individuals)
+
+  implicit lazy val arbPopulation: Arbitrary[Population] = Arbitrary(genPopulation)
 }
