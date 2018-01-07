@@ -54,4 +54,15 @@ object Generators {
   } yield Individual(sex, birthGeneration, (dna1, dna2), phenotype)
 
   implicit lazy val arbIndividual: Arbitrary[Individual] = Arbitrary(genIndividual)
+
+  lazy val genSchema: Gen[Schema] = for {
+    a1  <- arbitrary[Option[Allelle]]
+    a2  <- arbitrary[Option[Allelle]]
+    a3  <- arbitrary[Option[Allelle]]
+    a4  <- arbitrary[Option[Allelle]]
+    a5  <- arbitrary[Option[Allelle]]
+
+  } yield Schema (List(a1, a2, a3, a4, a5))
+
+  implicit lazy val arbSchema: Arbitrary[Schema] = Arbitrary(genSchema)
 }
