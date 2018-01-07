@@ -13,6 +13,8 @@ trait PopulationChange  {
 }
 
 trait Selection extends PopulationChange
+trait Mutation extends PopulationChange
+trait Breeding extends PopulationChange
 
 object AllSurvive extends Selection {
   override def apply(individuals: Set[Individual]): Set[Individual] = individuals
