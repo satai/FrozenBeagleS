@@ -12,6 +12,8 @@ trait PopulationChange  {
   def apply(individuals: Set[Individual]): Set[Individual]
 }
 
-object AllSurvive extends PopulationChange {
+trait Selection extends PopulationChange
+
+object AllSurvive extends Selection {
   override def apply(individuals: Set[Individual]): Set[Individual] = individuals
 }
