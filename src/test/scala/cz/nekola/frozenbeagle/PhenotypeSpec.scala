@@ -2,14 +2,14 @@ package cz.nekola.frozenbeagle
 
 import java.lang.Math.sqrt
 
-import cz.nekola.frozenbeagle.Phenotype.fitness
+import cz.nekola.frozenbeagle.Phenotype.{fitness, zeroPhenotype}
 import cz.nekola.frozenbeagle.SimulationConstants.dimensionCount
 import org.scalatest._
 import org.scalatest.prop.Checkers
-import smile.stat.distribution.{GaussianDistribution}
+import smile.stat.distribution.GaussianDistribution
 import smile.stat.hypothesis.KSTest
-
 import Generators._
+import cz.nekola.frozenbeagle.PhenotypeChange.zeroPhenotypeChange
 
 class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
@@ -69,6 +69,26 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
       }
     }
 
+    describe("apply phenotype change to a phenotype") {
+      it("zeroPhenotypeChange has no effect") {
+        check {
+          (p: Phenotype) => p == p + zeroPhenotypeChange
+        }
+      }
+
+      it("to apply more changes is the same as to apply them in an different order") {
+        check {
+          (p: Phenotype, pc1: PhenotypeChange, pc2: PhenotypeChange) => p + pc1 + pc2 == p + pc2 + pc1
+        }
+      }
+
+      it("to apply a change to a zeroPhenotype creates a phenotype with the same elements as the phenotype change") {
+        check {
+          (pc: PhenotypeChange) => (zeroPhenotype + pc).components == pc.components
+        }
+      }
+    }
+
     describe("random phenotype change with one non zero") {
       it("its length is dimensionCount") {
         PhenotypeChange.randomPhenotypeChangeWithOneNonZero.components.length should be(dimensionCount)
@@ -88,11 +108,11 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
     describe("zero phenotype") {
       it("contains zeroes only") {
-        Phenotype.zeroPhenotype.components.forall(0.0 ==) should be(true)
+        zeroPhenotype.components.forall(0.0 ==) should be(true)
       }
 
       it("has the dimension equal dimensionCount") {
-        Phenotype.zeroPhenotype.components.length should be(dimensionCount)
+        zeroPhenotype.components.length should be(dimensionCount)
       }
     }
 

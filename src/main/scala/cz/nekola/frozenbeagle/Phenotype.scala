@@ -2,6 +2,7 @@ package cz.nekola.frozenbeagle
 
 import java.lang.Math.{exp, sqrt}
 
+import cz.nekola.frozenbeagle.Phenotype.zeroPhenotype
 import cz.nekola.frozenbeagle.PhenotypeChange.randomPhenotypeChange
 import cz.nekola.frozenbeagle.SimulationConstants.{dimensionCount, fitnessDecreaseCoefficient, zeroPhenotypeVec}
 
@@ -16,6 +17,10 @@ case class Phenotype(components: List[Double]) {
              .sum)
 
   override def toString = this.components.mkString("(", ", ", ")")
+
+  def +(phenotypeChange: PhenotypeChange): Phenotype = {
+    Phenotype (this.components.zip(phenotypeChange.components).map(cs => cs._1 + cs._2))
+  }
 }
 
 case class PhenotypeChange(components: List[Double]) {
@@ -35,8 +40,10 @@ object Phenotype {
 object PhenotypeChange {
   def randomPhenotypeChange = PhenotypeChange ((1 to dimensionCount).map(_ => Random.nextGaussian()).toList)
 
-    def randomPhenotypeChangeWithOneNonZero = {
-        val cs : List[Double] = (Random.nextGaussian()) :: (for { _ <- (1 until dimensionCount) } yield 0.0).toList
-        PhenotypeChange (Random.shuffle(cs))
+  val zeroPhenotypeChange = PhenotypeChange(zeroPhenotypeVec)
+
+  def randomPhenotypeChangeWithOneNonZero = {
+    val cs : List[Double] = (Random.nextGaussian()) :: (for { _ <- (1 until dimensionCount) } yield 0.0).toList
+    PhenotypeChange (Random.shuffle(cs))
   }
 }
