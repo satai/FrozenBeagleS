@@ -1,11 +1,18 @@
 package cz.nekola.frozenbeagle
 
+import scala.util.Random.shuffle
+
 case class Population( generation: Int
                      , individuals: Set[Individual]
                      ) {
   def males: Set[Individual] = individuals.filter(_.sex == M)
   def females: Set[Individual] = individuals.filter(_.sex == F)
 
+  def chosenPairs(toChoose: Int): Set[(Individual, Individual)] = {
+    shuffle(
+      males.zip(females)
+    ).take(toChoose)
+  }
 }
 
 trait PopulationChange  {
