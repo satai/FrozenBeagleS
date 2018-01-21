@@ -8,9 +8,11 @@ case class Population( generation: Int
   def males: Set[Individual] = individuals.filter(_.sex == M)
   def females: Set[Individual] = individuals.filter(_.sex == F)
 
+  def size: Int = individuals.size
+
   def chosenPairs(toChoose: Int): Set[(Individual, Individual)] = {
     shuffle(
-      males.zip(females)
+      males.zip(shuffle(females))
     ).take(toChoose)
   }
 }
