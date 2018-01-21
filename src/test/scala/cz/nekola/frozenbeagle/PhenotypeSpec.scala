@@ -87,6 +87,7 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
           (pc: PhenotypeChange) => (zeroPhenotype + pc).components == pc.components
         }
       }
+    }
 
     describe("apply phenotype change to a phenotype change") {
       it("zeroPhenotypeChange has no effect") {
@@ -106,7 +107,8 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
           (pc: PhenotypeChange) => (zeroPhenotypeChange + pc).components == pc.components
         }
       }
-    }   }
+    }
+
 
     describe("random phenotype change with one non zero") {
       it("its length is dimensionCount") {

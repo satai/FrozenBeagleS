@@ -2,6 +2,7 @@ package cz.nekola.frozenbeagle
 
 import cz.nekola.frozenbeagle.Generators._
 import cz.nekola.frozenbeagle.Individual.randomOffspring
+import org.scalacheck.Prop.forAllNoShrink
 import org.scalatest.prop.Checkers
 import org.scalatest.{FunSpec, Matchers}
 
@@ -10,7 +11,9 @@ class IndividualSpec extends FunSpec with Matchers with Checkers  {
   describe("random offspring") {
     it ("birth generation is current simulation round") {
       check {
-        (p1: Individual, p2: Individual, gen: Int) => randomOffspring(gen, p1, p2).birthGeneration == gen
+        forAllNoShrink {
+          (i1:  Individual, i2: Individual, gen: Int) => randomOffspring(gen, i1, i2).birthGeneration == gen
+        }
       }
     }
 
