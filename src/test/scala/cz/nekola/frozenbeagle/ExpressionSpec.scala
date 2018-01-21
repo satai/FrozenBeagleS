@@ -8,8 +8,6 @@ import cz.nekola.frozenbeagle.Expression.expression
 
 class ExpressionSpec extends FunSpec with Matchers with Checkers {
 
-
-
   describe("Expression") {
     it("is sum of parts for non-dominant allellas") {
       check { (sex: Sex) =>
