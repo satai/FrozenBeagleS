@@ -21,10 +21,10 @@ class IndividualSpec extends FunSpec with Matchers with Checkers  {
       val parent1 = genIndividual.sample.get
       val parent2 = genIndividual.sample.get
 
-      val daughters= (1 to 1600).map{_ => randomOffspring(1, parent1, parent2)}.filter{ i => i.sex == F}
+      val daughters= (1 to 2000).map{_ => randomOffspring(1, parent1, parent2)}.filter{ i => i.sex == F}
 
-      (daughters.size <= 1600 / 2 * 1.05) shouldBe true
-      (daughters.size >= 1600 / 2 / 1.05) shouldBe true
+      (daughters.size <= 2000 / 2 * 1.08) shouldBe true
+      (daughters.size >= 2000 / 2 / 1.08) shouldBe true
     }
   }
 

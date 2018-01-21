@@ -33,7 +33,7 @@ class GenesSpec extends FunSpec with Matchers with Checkers {
     }
 
     it ("mutated DNAs sometimes differ from original DNAs") {
-      val dnas = (1 to 10000).map{_ => genDnaString}.map{it => it.sample.get}
+      val dnas = (1 to 40000).map{_ => genDnaString}.map{it => it.sample.get}
       val mutated = dnas.map(it => it.mutate)
 
       (dnas.toSet.diff(mutated.toSet).size > 3) should be(true)
