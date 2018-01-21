@@ -1,5 +1,7 @@
 package cz.nekola.frozenbeagle
 
+import java.lang.Math.{max, min}
+
 import org.scalatest.prop.Checkers
 import org.scalatest.{Matchers, _}
 import Generators._
@@ -53,7 +55,7 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
         }
       }
 
-      it("there are thee chosen pairs when choosing 3 from population of 4 males and 5 females") {
+      it("there are three chosen pairs when choosing 3 from population of 4 males and 5 females") {
         check { (dna: DnaString, p: Phenotype) =>
           Population(0, Set( Individual(M, 0, (dna, dna), p)
                            , Individual(M, 1, (dna, dna), p)
@@ -79,11 +81,10 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
       )
 
       it("there is less or equal chosen pairs when choosing a smaller fraction from a population") {
-
         check {
           (f1: Choice, f2: Choice, p: Population) =>
-            val smaller = Math.min(f1(), f2())
-            val bigger = Math.max(f1(), f2())
+            val smaller = min(f1(), f2())
+            val bigger = max(f1(), f2())
             p.chosenPairs(smaller).size <= p.chosenPairs(bigger).size
         }
       }
@@ -93,7 +94,13 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
           (c: Choice, p: Population) =>
             p.chosenPairs(c()).size <= c()
         }
+      }
 
+      it("choice of population size of pairs chooses number of pairs that is number of individuals of the less frequent sex") {
+        check {
+          (p: Population) =>
+            p.chosenPairs(p.size).size == min(p.males.size, p.females.size)
+        }
       }
     }
 
