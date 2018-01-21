@@ -69,15 +69,16 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
         }
       }
 
+      case class Choice(v: Int) {
+        def apply(): Int = this.v
+      }
+      implicit lazy val fraction: Arbitrary[Choice] = Arbitrary(
+        for {
+          c <- Gen.choose(0, 15)
+        } yield Choice(c)
+      )
+
       it("there is less or equal chosen pairs when choosing a smaller fraction from a population") {
-        case class Choice(v: Int) {
-          def apply(): Int = this.v
-        }
-        implicit lazy val fraction: Arbitrary[Choice] = Arbitrary(
-          for {
-            c <- Gen.choose(0, 5)
-          } yield Choice(c)
-        )
 
         check {
           (f1: Choice, f2: Choice, p: Population) =>
@@ -85,6 +86,14 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
             val bigger = Math.max(f1(), f2())
             p.chosenPairs(smaller).size <= p.chosenPairs(bigger).size
         }
+      }
+
+      it("choice of n pairs is not bigger than n") {
+        check {
+          (c: Choice, p: Population) =>
+            p.chosenPairs(c()).size <= c()
+        }
+
       }
     }
 
