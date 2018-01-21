@@ -11,9 +11,9 @@ case class Population( generation: Int
   def size: Int = individuals.size
 
   def chosenPairs(toChoose: Int): Set[(Individual, Individual)] = {
-    shuffle(
-      males.zip(shuffle(females))
-    ).take(toChoose)
+    shuffle(males)
+      .zip(shuffle(females))
+      .take(toChoose)
   }
 }
 
