@@ -5,8 +5,9 @@ import java.lang.Math.{max, min}
 import org.scalatest.prop.Checkers
 import org.scalatest.{Matchers, _}
 import Generators._
-import org.scalacheck.Prop.forAll
-import org.scalacheck.{Arbitrary, Gen, Prop}
+import org.scalacheck.{Arbitrary, Gen}
+
+import scala.collection.immutable.List
 
 class PopulationSpec extends FunSpec with Matchers with Checkers {
   describe("Population") {
@@ -26,14 +27,18 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
     }
 
     it("all males are males and all females are females") {
-     check {
-       (p: Population) =>
-         p.females.forall{_.sex == F} && p.males.forall{_.sex == M}
-     }
+      check {
+        (p: Population) =>
+          p.females.forall {
+            _.sex == F
+          } && p.males.forall {
+            _.sex == M
+          }
+      }
     }
 
     describe("all survive selection") {
-      it ("doesn't change the population") {
+      it("doesn't change the population") {
         check {
           (p: Population) =>
             AllSurvive(p.individuals) == p.individuals
@@ -48,24 +53,24 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
 
       it("there are some chosen pairs when choosing 1 from non empty population") {
         check { (dna: DnaString, p: Phenotype) =>
-          Population(0, Set( Individual(M, 1, (dna, dna), p)
-                           , Individual(F, 0, (dna, dna), p)
-                           )
+          Population(0, Set(Individual(M, 1, (dna, dna), p)
+            , Individual(F, 0, (dna, dna), p)
+          )
           ).chosenPairs(1).nonEmpty
         }
       }
 
       it("there are three chosen pairs when choosing 3 from population of 4 males and 5 females") {
         check { (dna: DnaString, p: Phenotype) =>
-          Population(0, Set( Individual(M, 0, (dna, dna), p)
-                           , Individual(M, 1, (dna, dna), p)
-                           , Individual(M, 2, (dna, dna), p)
-                           , Individual(M, 3, (dna, dna), p)
-                           , Individual(F, 0, (dna, dna), p)
-                           , Individual(F, 1, (dna, dna), p)
-                           , Individual(F, 2, (dna, dna), p)
-                           , Individual(F, 3, (dna, dna), p)
-                           , Individual(F, 4, (dna, dna), p)
+          Population(0, Set(Individual(M, 0, (dna, dna), p)
+            , Individual(M, 1, (dna, dna), p)
+            , Individual(M, 2, (dna, dna), p)
+            , Individual(M, 3, (dna, dna), p)
+            , Individual(F, 0, (dna, dna), p)
+            , Individual(F, 1, (dna, dna), p)
+            , Individual(F, 2, (dna, dna), p)
+            , Individual(F, 3, (dna, dna), p)
+            , Individual(F, 4, (dna, dna), p)
           )
           ).chosenPairs(3).size == 3
         }
@@ -104,5 +109,30 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
       }
     }
 
+    describe("death of old") {
+      it("all survivors are born after or in the specified generation") {
+        check {
+          (p: Population, gen: Int) =>
+            p.dieBornBefore(gen).forall {
+              _.birthGeneration >= gen
+            }
+        }
+      }
+
+      it("all survivors were members of the original population") {
+        check {
+          (p: Population, gen: Int) =>
+            p.dieBornBefore(gen).subsetOf(p.individuals)
+        }
+
+      }
+      it("keeps young enough individuals") {
+        check {
+          (p: Population, gen: Int) =>
+            val youngling = Individual(F, gen, (DnaString(List.empty), DnaString(List.empty)), Phenotype(List.empty))
+            Population(p.generation, p.individuals + youngling).dieBornBefore(gen).contains(youngling)
+        }
+      }
+    }
   }
 }

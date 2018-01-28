@@ -5,6 +5,7 @@ import scala.util.Random.shuffle
 case class Population( generation: Int
                      , individuals: Set[Individual]
                      ) {
+
   def males: Set[Individual] = individuals.filter(_.sex == M)
   def females: Set[Individual] = individuals.filter(_.sex == F)
 
@@ -15,6 +16,8 @@ case class Population( generation: Int
       .zip(shuffle(females))
       .take(toChoose)
   }
+
+  def dieBornBefore(gen: Int): Set[Individual] = individuals.filter{individual => individual.birthGeneration >= gen}
 }
 
 trait PopulationChange  {
