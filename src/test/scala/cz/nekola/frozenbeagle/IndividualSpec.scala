@@ -26,6 +26,9 @@ class IndividualSpec extends FunSpec with Matchers with Checkers  {
       (daughters.size <= 2000 / 2 * 1.08) shouldBe true
       (daughters.size >= 2000 / 2 / 1.08) shouldBe true
     }
+
+  //FIXME more tests
   }
+
 
 }
