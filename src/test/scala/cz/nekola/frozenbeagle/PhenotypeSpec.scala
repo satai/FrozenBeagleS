@@ -10,6 +10,7 @@ import smile.stat.distribution.GaussianDistribution
 import smile.stat.hypothesis.KSTest
 import Generators._
 import cz.nekola.frozenbeagle.PhenotypeChange.zeroPhenotypeChange
+import org.apache.commons.math3.util.Precision
 
 class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
@@ -78,7 +79,15 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
       it("to apply more changes is the same as to apply them in an different order") {
         check {
-          (p: Phenotype, pc1: PhenotypeChange, pc2: PhenotypeChange) => p + pc1 + pc2 == p + pc2 + pc1
+          (p: Phenotype, pc1: PhenotypeChange, pc2: PhenotypeChange) =>
+            val r1 = p + pc1 + pc2
+            val r2 = p + pc2 + pc1
+
+            def aboutTheSame(r1: List[Double], r2: List[Double]) = {
+              r1.zip(r2).forall { x: (Double, Double) => Precision.equalsWithRelativeTolerance(x._1, x._2, 0.001) }
+            }
+
+            aboutTheSame(r1.components, r2.components)
         }
       }
 
