@@ -3,25 +3,23 @@ package cz.nekola.frozenbeagle
 import org.scalacheck.{Arbitrary, Gen}
 import Arbitrary.arbitrary
 
-import scala.collection.immutable
-
 object Generators {
   implicit lazy val arbSex: Arbitrary[Sex] = Arbitrary(Gen.oneOf(F, M))
 
   lazy val genPhenotype: Gen[Phenotype] = for {
-    x1 <- arbitrary[Double]
-    x2 <- arbitrary[Double]
-    x3 <- arbitrary[Double]
-    x4 <- arbitrary[Double]
+    x1 <- Gen.chooseNum(-10.0, 10.0, 0.0, 0.0)
+    x2 <- Gen.choose(-10.0, 10.0)
+    x3 <- Gen.choose(-10.0, 10.0)
+    x4 <- Gen.choose(-10.0, 10.0)
   } yield Phenotype(List(x1, x2, x3, x4))
 
   implicit lazy val arbPhenotype: Arbitrary[Phenotype] = Arbitrary(genPhenotype)
 
   lazy val genPhenotypeChange: Gen[PhenotypeChange] = for {
-    x1 <- arbitrary[Double]
-    x2 <- arbitrary[Double]
-    x3 <- arbitrary[Double]
-    x4 <- arbitrary[Double]
+    x1 <- Gen.chooseNum(-3.0, 3.0, 0.0, 0.0)
+    x2 <- Gen.choose(-3.0, 3.0)
+    x3 <- Gen.choose(-3.0, 3.0)
+    x4 <- Gen.choose(-3.0, 3.0)
   } yield PhenotypeChange(List(x1, x2, x3, x4))
 
   implicit lazy val arbPhenotypeChange: Arbitrary[PhenotypeChange] = Arbitrary(genPhenotypeChange)

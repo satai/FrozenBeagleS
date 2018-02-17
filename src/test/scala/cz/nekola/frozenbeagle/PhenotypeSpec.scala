@@ -15,6 +15,10 @@ import org.apache.commons.math3.util.Precision
 class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
 
+  def aboutTheSame(r1: List[Double], r2: List[Double]) = {
+    r1.zip(r2).forall { x: (Double, Double) => Precision.equalsWithRelativeTolerance(x._1, x._2, 0.001) }
+  }
+
   describe("Phenotypes and their changes") {
 
     describe("Distance") {
@@ -83,10 +87,6 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
             val r1 = p + pc1 + pc2
             val r2 = p + pc2 + pc1
 
-            def aboutTheSame(r1: List[Double], r2: List[Double]) = {
-              r1.zip(r2).forall { x: (Double, Double) => Precision.equalsWithRelativeTolerance(x._1, x._2, 0.001) }
-            }
-
             aboutTheSame(r1.components, r2.components)
         }
       }
@@ -107,7 +107,8 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
       it("to apply more changes is the same as to apply them in an different order") {
         check {
-          (pc: PhenotypeChange, pc1: PhenotypeChange, pc2: PhenotypeChange) => pc + pc1 + pc2 == pc + pc2 + pc1
+          (pc: PhenotypeChange, pc1: PhenotypeChange, pc2: PhenotypeChange) =>
+            aboutTheSame((pc + pc1 + pc2).components, (pc + pc2 + pc1).components)
         }
       }
 
