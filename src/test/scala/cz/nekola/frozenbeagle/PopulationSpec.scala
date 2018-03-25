@@ -158,7 +158,7 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
         val willDieByTurbidostat = deathProbability * populationSizeAfterMating
         val willDieOfAge = populationSizeAfterMating / maxAge
 
-        1024 shouldEqual (populationSizeAfterMating - deathProbability * populationSizeAfterMating - willDieOfAge )
+        1024 shouldEqual (populationSizeAfterMating - willDieByTurbidostat - willDieOfAge )
       }
   }
 }
