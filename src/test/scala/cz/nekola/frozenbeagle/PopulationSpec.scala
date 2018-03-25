@@ -135,4 +135,30 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
       }
     }
   }
+
+
+  describe("Turbidostat") {
+      it("Computes right k4 for given population size, maximum age and accidental death probability") {
+        Turbidostat(256, 0.0, 64).k4 shouldEqual 2.1545975296585646E-6
+      }
+
+      it("k5 is the same as accidental death probability") {
+        Turbidostat(1256, 0.2, 11).k5 shouldEqual 0.2
+      }
+
+      it ("turbidostat constants keep population stable for pair fitness = 1.0 and population size 1024") {
+        val maxAge = 64
+
+        val k4 = Turbidostat(1024, 0.1, maxAge).k4
+        val k5 = Turbidostat(1024, 0.1, maxAge).k5
+        val populationSizeAfterMating = 1024 * 1.5
+
+        val deathProbability = k4 * populationSizeAfterMating * populationSizeAfterMating + k5
+
+        val willDieByTurbidostat = deathProbability * populationSizeAfterMating
+        val willDieOfAge = populationSizeAfterMating / maxAge
+
+        1024 shouldEqual (populationSizeAfterMating - deathProbability * populationSizeAfterMating - willDieOfAge )
+      }
+  }
 }
