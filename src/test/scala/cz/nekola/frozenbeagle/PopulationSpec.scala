@@ -148,9 +148,9 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
 
       it ("turbidostat constants keep population stable for pair fitness = 1.0 and population size 1024") {
         val maxAge = 64
-
-        val k4 = Turbidostat(1024, 0.1, maxAge).k4
-        val k5 = Turbidostat(1024, 0.1, maxAge).k5
+        val turbidostat = Turbidostat(1024, 0.1, maxAge)
+        val k4 = turbidostat.k4
+        val k5 = turbidostat.k5
         val populationSizeAfterMating = 1024 * 1.5
 
         val deathProbability = k4 * populationSizeAfterMating * populationSizeAfterMating + k5
