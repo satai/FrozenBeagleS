@@ -113,24 +113,33 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
       it("all survivors are born after or in the specified generation") {
         check {
           (p: Population, gen: Int) =>
-            p.dieBornBefore(gen).forall {
+            new DeathByAge(gen)(p.individuals).forall {
               _.birthGeneration >= gen
             }
         }
       }
 
+
       it("all survivors were members of the original population") {
         check {
           (p: Population, gen: Int) =>
-            p.dieBornBefore(gen).subsetOf(p.individuals)
+            new DeathByAge(gen)(p.individuals) subsetOf p.individuals
         }
-
       }
+
       it("keeps young enough individuals") {
         check {
-          (p: Population, gen: Int) =>
-            val youngling = Individual(F, gen, (DnaString(List.empty), DnaString(List.empty)), Phenotype(List.empty))
-            Population(p.generation, p.individuals + youngling).dieBornBefore(gen).contains(youngling)
+          (p: Population) =>
+            val youngling = Individual(F, p.generation, (DnaString(List.empty), DnaString(List.empty)), Phenotype(List.empty))
+            DeathByAge(1, p.generation)(p.individuals + youngling) contains youngling
+        }
+      }
+
+      it("kills old enough individuals") {
+        check {
+          (p: Population) =>
+            val theOldOne = Individual(F, p.generation - 3, (DnaString(List.empty), DnaString(List.empty)), Phenotype(List.empty))
+            ! DeathByAge(2, p.generation)(p.individuals + theOldOne).contains(theOldOne)
         }
       }
     }

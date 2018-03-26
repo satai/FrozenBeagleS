@@ -1,6 +1,5 @@
 package cz.nekola.frozenbeagle
 
-import scala.math.Ordering.Implicits.infixOrderingOps
 import scala.util.Random
 import scala.util.Random.shuffle
 
@@ -19,7 +18,6 @@ case class Population( generation: Int
       .take(toChoose)
   }
 
-  def dieBornBefore(gen: Int): Set[Individual] = individuals.filter{individual => individual.birthGeneration >= gen}
 }
 
 trait PopulationChange  {
@@ -54,6 +52,16 @@ object Turbidostat {
 
     new Turbidostat(k4, accidentDeathProbability)
   }
+}
+
+case class DeathByAge(gen: Int) extends PopulationChange {
+  override def apply(individuals: Set[Individual]) = individuals.filter {
+    individual => individual.birthGeneration >= gen
+  }
+}
+
+object DeathByAge {
+  def apply(maxAge: Int, actualGeneration: Int) = new DeathByAge(actualGeneration - maxAge)
 }
 
 object AllSurvive extends PopulationChange {
