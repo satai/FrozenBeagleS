@@ -1,9 +1,18 @@
 package cz.nekola.frozenbeagle
 
-case class EvolutionRules(populationChanges: Array[Int => PopulationChange])
+case class EvolutionRules(populationChanges: Array[Int => PopulationChange]) extends AnyVal
 
-object EvolutionRules{
 
+//FIXME test it
+object EvolutionRules {
+  def apply( maximumAge: Int
+           , populationSize: Int
+           ): EvolutionRules = {
+    new EvolutionRules(Array(
+      _   => Turbidostat(populationSize, 0.0, maximumAge)
+    , gen => DeathByAge(maximumAge, gen)
+    ))
+  }
 }
 
 object Evolution {
