@@ -7,8 +7,8 @@ case class EvolutionRules(populationChanges: Array[Int => PopulationChange]) ext
 object EvolutionRules {
 
   def optimumForGen(gen: Int) =
-    if (gen < 512) Phenotype(List(0.0, 1.2, -3, 0.1))
-    else Phenotype(List(0.5, 3, -2, 2))
+    if (gen < 512) Phenotype(Array(0.0, 4.2, -16, 0.1))
+    else Phenotype(Array(-5, 12, -2, 9))
 
   def apply(maximumAge: Int
            , populationSize: Int
