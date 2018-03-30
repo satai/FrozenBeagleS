@@ -5,11 +5,17 @@ case class EvolutionRules(populationChanges: Array[Int => PopulationChange]) ext
 
 //FIXME test it
 object EvolutionRules {
-  def apply( maximumAge: Int
+
+  def optimumForGen(gen: Int) =
+    if (gen < 512) Phenotype(List(0.0, 1.2, -3, 0.1))
+    else Phenotype(List(0.5, 3, -2, 2))
+
+  def apply(maximumAge: Int
            , populationSize: Int
            ): EvolutionRules = {
     new EvolutionRules(Array(
-      _   => Turbidostat(populationSize, 0.0, maximumAge)
+      gen => PanmicticOverlap(optimumForGen(gen))(gen)
+    , _   => Turbidostat(populationSize, 0.0, maximumAge)
     , gen => DeathByAge(maximumAge, gen)
     ))
   }

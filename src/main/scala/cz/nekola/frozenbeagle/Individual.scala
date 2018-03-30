@@ -1,5 +1,7 @@
 package cz.nekola.frozenbeagle
 
+import cz.nekola.frozenbeagle.Phenotype.fitness
+
 import scala.util.Random
 
 case class Individual ( sex: Sex
@@ -11,6 +13,13 @@ case class Individual ( sex: Sex
 object Individual {
 
   import scala.util.Random._
+
+  def apply(sex: Sex
+            , birthGeneration: Int
+            , chromosomes: (DnaString, DnaString)
+           ): Individual = {
+    new Individual(sex, birthGeneration, chromosomes, Expression.expression(sex)(chromosomes))
+  }
 
   def randomOffspring(simulationRound: Int, father: Individual, mother: Individual) : Individual = {
     val sex = if (nextBoolean()) F else M
@@ -26,5 +35,22 @@ object Individual {
     val c2 = DnaString.crossover(c12, c22)
 
     Individual(sex, simulationRound, (c1, c2), Expression.expression(sex)(c1, c2))
+  }
+
+  //FIXME missing tests
+  def mate(simulationRound: Int)(optimum: Phenotype) (father: Individual, mother: Individual) : Set[Individual] = {
+    val p1 = fitness(optimum)(father.phenotype)
+    val p2 = fitness(optimum)(father.phenotype)
+
+    val avgPairFitness = (p1 + p2) / 2.0
+
+    val probabilityToHaveChild = avgPairFitness
+
+    if (nextDouble() <= probabilityToHaveChild) {
+      val child = randomOffspring(simulationRound, father, mother)
+      Set(child)
+    } else {
+      Set()
+    }
   }
 }

@@ -11,21 +11,14 @@ case class Population( generation: Int
   def females: Set[Individual] = individuals.filter(_.sex == F)
 
   def size: Int = individuals.size
-
-  def chosenPairs(toChoose: Int): Set[(Individual, Individual)] = {
-    shuffle(males)
-      .zip(shuffle(females))
-      .take(toChoose)
-  }
-
 }
 
-trait PopulationChange  {
+trait PopulationChange {
   def apply(individuals: Set[Individual]): Set[Individual]
 }
 
-case class Turbidostat( k4: Double
-                      , k5: Double
+case class Turbidostat(k4: Double
+                       , k5: Double
                       ) extends PopulationChange {
 
   override def apply(individuals: Set[Individual]): Set[Individual] = {
@@ -62,6 +55,26 @@ case class DeathByAge(gen: Int) extends PopulationChange {
 
 object DeathByAge {
   def apply(maxAge: Int, actualGeneration: Int) = new DeathByAge(actualGeneration - maxAge)
+}
+
+case class PanmicticOverlap(optimum: Phenotype)(gen: Int) extends PopulationChange {
+  override def apply(individuals: Set[Individual]) = {
+    val mate = Individual.mate(gen)(optimum) _
+    val pairs = PanmicticOverlap.chosenPairs(individuals)
+    val newBorns = pairs.flatMap(p =>  mate(p._1, p._2))
+
+    individuals ++ newBorns
+  }
+}
+
+object PanmicticOverlap {
+  def chosenPairs(population: Population): Set[(Individual, Individual)] = chosenPairs(population.individuals)
+
+  def chosenPairs(individuals: Set[Individual], toChoose: Int = Int.MaxValue): Set[(Individual, Individual)] = {
+    shuffle(individuals.filter(_.sex == F))
+      .zip(shuffle(individuals.filter(_.sex == M)))
+      .take(toChoose)
+  }
 }
 
 object AllSurvive extends PopulationChange {

@@ -3,8 +3,6 @@ package cz.nekola.frozenbeagle
 import org.scalatest.prop.Checkers
 import org.scalatest.{Matchers, _}
 
-import scala.collection.immutable.List
-
 import Generators._
 
 class GenesSpec extends FunSpec with Matchers with Checkers {

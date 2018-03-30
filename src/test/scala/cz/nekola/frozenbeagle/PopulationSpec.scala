@@ -5,6 +5,7 @@ import java.lang.Math.{max, min}
 import org.scalatest.prop.Checkers
 import org.scalatest.{Matchers, _}
 import Generators._
+import cz.nekola.frozenbeagle.PanmicticOverlap.chosenPairs
 import org.scalacheck.{Arbitrary, Gen}
 
 import scala.collection.immutable.List
@@ -48,31 +49,35 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
 
     describe("chosen pairs") {
       it("there are no chosen pairs when choosing from empty population") {
-        Population(0, Set()).chosenPairs(1).isEmpty
+        chosenPairs(Set(), 1).isEmpty
       }
 
       it("there are some chosen pairs when choosing 1 from non empty population") {
-        check { (dna: DnaString, p: Phenotype) =>
-          Population(0, Set(Individual(M, 1, (dna, dna), p)
-            , Individual(F, 0, (dna, dna), p)
-          )
-          ).chosenPairs(1).nonEmpty
+        check { (dna: DnaString, p: Phenotype) => {
+          val population = Population(0, Set( Individual(M, 1, (dna, dna), p)
+                                            , Individual(F, 0, (dna, dna), p)
+                                            )
+                                     )
+          chosenPairs(population).nonEmpty
+          }
         }
       }
 
       it("there are three chosen pairs when choosing 3 from population of 4 males and 5 females") {
-        check { (dna: DnaString, p: Phenotype) =>
-          Population(0, Set(Individual(M, 0, (dna, dna), p)
-            , Individual(M, 1, (dna, dna), p)
-            , Individual(M, 2, (dna, dna), p)
-            , Individual(M, 3, (dna, dna), p)
-            , Individual(F, 0, (dna, dna), p)
-            , Individual(F, 1, (dna, dna), p)
-            , Individual(F, 2, (dna, dna), p)
-            , Individual(F, 3, (dna, dna), p)
-            , Individual(F, 4, (dna, dna), p)
-          )
-          ).chosenPairs(3).size == 3
+        check { (dna: DnaString, p: Phenotype) => {
+          val pop = Set ( Individual(M, 0, (dna, dna), p)
+                        , Individual(M, 1, (dna, dna), p)
+                        , Individual(M, 2, (dna, dna), p)
+                        , Individual(M, 3, (dna, dna), p)
+                        , Individual(F, 0, (dna, dna), p)
+                        , Individual(F, 1, (dna, dna), p)
+                        , Individual(F, 2, (dna, dna), p)
+                        , Individual(F, 3, (dna, dna), p)
+                        , Individual(F, 4, (dna, dna), p)
+                        )
+
+          chosenPairs(pop, 3).size == 3
+          }
         }
       }
 
@@ -90,21 +95,21 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
           (f1: Choice, f2: Choice, p: Population) =>
             val smaller = min(f1(), f2())
             val bigger = max(f1(), f2())
-            p.chosenPairs(smaller).size <= p.chosenPairs(bigger).size
+            chosenPairs(p.individuals, smaller).size <= chosenPairs(p.individuals, bigger).size
         }
       }
 
       it("choice of n pairs is not bigger than n") {
         check {
-          (c: Choice, p: Population) =>
-            p.chosenPairs(c()).size <= c()
+          (c: Choice, p: Set[Individual]) =>
+            chosenPairs(p, c()).size <= c()
         }
       }
 
       it("choice of population size of pairs chooses number of pairs that is number of individuals of the less frequent sex") {
         check {
           (p: Population) =>
-            p.chosenPairs(p.size).size == min(p.males.size, p.females.size)
+            chosenPairs(p).size == min(p.males.size, p.females.size)
         }
       }
     }
