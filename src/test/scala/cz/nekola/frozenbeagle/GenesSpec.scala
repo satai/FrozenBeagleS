@@ -9,17 +9,17 @@ class GenesSpec extends FunSpec with Matchers with Checkers {
   describe("Alleles") {
     it("Allele has sane text representation like '{Δ(0.0, 1.0, 2.0, -3.4)|Δ(0.0, 0.0, 0.0, 11.1)}'") {
       Allelle(
-        PhenotypeChange (List(0, 1, 2, -3.4)),
-        PhenotypeChange (List(0, 0, 0, 11.1))
+        PhenotypeChange (Array(0, 1, 2, -3.4)),
+        PhenotypeChange (Array(0, 0, 0, 11.1))
       ).toString should equal("{Δ(0.0, 1.0, 2.0, -3.4)|Δ(0.0, 0.0, 0.0, 11.1)}")
     }
   }
 
   describe("DNA") {
     it("has sane text representation like '[{Δ(1.1, 1.2)|Δ(-1.2, 0.3)}, {Δ(-1.2, 0.3)|Δ(-0.2, 0.3)}]'") {
-        DnaString (List ( Allelle(PhenotypeChange(List(1.1, 1.2)), PhenotypeChange(List(-1.2, 0.3)))
-                        , Allelle(PhenotypeChange(List(-1.2, 0.3)), PhenotypeChange(List(-0.2, 0.3)))
-                        )).toString should be("[{Δ(1.1, 1.2)|Δ(-1.2, 0.3)}, {Δ(-1.2, 0.3)|Δ(-0.2, 0.3)}]")
+        DnaString (Array ( Allelle(PhenotypeChange(Array(1.1, 1.2)), PhenotypeChange(Array(-1.2, 0.3)))
+                         , Allelle(PhenotypeChange(Array(-1.2, 0.3)), PhenotypeChange(Array(-0.2, 0.3)))
+                         )).toString should be("[{Δ(1.1, 1.2)|Δ(-1.2, 0.3)}, {Δ(-1.2, 0.3)|Δ(-0.2, 0.3)}]")
 
     }
 
@@ -54,14 +54,14 @@ class GenesSpec extends FunSpec with Matchers with Checkers {
     it ("DNA after crossover has the same beginning as the first DNA") {
       check {
         (dna1: DnaString, dna2: DnaString) =>
-          DnaString.crossoverWithPoint(2,dna1, dna2).genes.take(2) == dna1.genes.take(2)
+          DnaString.crossoverWithPoint(2, dna1, dna2).genes.take(2) sameElements dna1.genes.take(2)
       }
     }
 
     it ("DNA after crossover has the same ending as the second DNA") {
       check {
         (dna1: DnaString, dna2: DnaString) =>
-          DnaString.crossoverWithPoint(2,dna1, dna2).genes.drop(2) == dna2.genes.drop(2)
+          DnaString.crossoverWithPoint(2, dna1, dna2).genes.drop(2) sameElements dna2.genes.drop(2)
       }
     }
 

@@ -8,7 +8,6 @@ import Generators._
 import cz.nekola.frozenbeagle.PanmicticOverlap.chosenPairs
 import org.scalacheck.{Arbitrary, Gen}
 
-import scala.collection.immutable.List
 
 class PopulationSpec extends FunSpec with Matchers with Checkers {
   describe("Population") {
@@ -16,7 +15,7 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
     it("can be divided into males and females") {
       check {
         (p: Population) =>
-          p.individuals == p.males ++ p.females
+          p.individuals.toSet == (p.males ++ p.females).toSet
       }
     }
 
@@ -49,12 +48,12 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
 
     describe("chosen pairs") {
       it("there are no chosen pairs when choosing from empty population") {
-        chosenPairs(Set(), 1).isEmpty
+        chosenPairs(Seq(), 1).isEmpty
       }
 
       it("there are some chosen pairs when choosing 1 from non empty population") {
         check { (dna: DnaString, p: Phenotype) => {
-          val population = Population(0, Set( Individual(M, 1, (dna, dna), p)
+          val population = Population(0, Seq( Individual(M, 1, (dna, dna), p)
                                             , Individual(F, 0, (dna, dna), p)
                                             )
                                      )
@@ -65,7 +64,7 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
 
       it("there are three chosen pairs when choosing 3 from population of 4 males and 5 females") {
         check { (dna: DnaString, p: Phenotype) => {
-          val pop = Set ( Individual(M, 0, (dna, dna), p)
+          val pop = Seq ( Individual(M, 0, (dna, dna), p)
                         , Individual(M, 1, (dna, dna), p)
                         , Individual(M, 2, (dna, dna), p)
                         , Individual(M, 3, (dna, dna), p)
@@ -101,7 +100,7 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
 
       it("choice of n pairs is not bigger than n") {
         check {
-          (c: Choice, p: Set[Individual]) =>
+          (c: Choice, p: Seq[Individual]) =>
             chosenPairs(p, c()).size <= c()
         }
       }
@@ -128,23 +127,23 @@ class PopulationSpec extends FunSpec with Matchers with Checkers {
       it("all survivors were members of the original population") {
         check {
           (p: Population, gen: Int) =>
-            new DeathByAge(gen)(p.individuals) subsetOf p.individuals
+            new DeathByAge(gen)(p.individuals).toSet subsetOf p.individuals.toSet
         }
       }
 
       it("keeps young enough individuals") {
         check {
           (p: Population) =>
-            val youngling = Individual(F, p.generation, (DnaString(List.empty), DnaString(List.empty)), Phenotype(List.empty))
-            DeathByAge(1, p.generation)(p.individuals + youngling) contains youngling
+            val youngling = Individual(F, p.generation, (DnaString(Array.empty), DnaString(Array.empty)), Phenotype(Array.empty))
+            DeathByAge(1, p.generation)(youngling +: p.individuals) contains youngling
         }
       }
 
       it("kills old enough individuals") {
         check {
           (p: Population) =>
-            val theOldOne = Individual(F, p.generation - 3, (DnaString(List.empty), DnaString(List.empty)), Phenotype(List.empty))
-            ! DeathByAge(2, p.generation)(p.individuals + theOldOne).contains(theOldOne)
+            val theOldOne = Individual(F, p.generation - 3, (DnaString(Array.empty), DnaString(Array.empty)), Phenotype(Array.empty))
+            ! DeathByAge(2, p.generation)(theOldOne +: p.individuals).contains(theOldOne)
         }
       }
     }

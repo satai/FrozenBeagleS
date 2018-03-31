@@ -4,24 +4,24 @@ import scala.util.Random
 import scala.util.Random.shuffle
 
 case class Population( generation: Int
-                     , individuals: Set[Individual]
+                     , individuals: Seq[Individual]
                      ) {
 
-  def males: Set[Individual] = individuals.filter(_.sex == M)
-  def females: Set[Individual] = individuals.filter(_.sex == F)
+  def males: Seq[Individual] = individuals.filter(_.sex == M)
+  def females: Seq[Individual] = individuals.filter(_.sex == F)
 
   def size: Int = individuals.size
 }
 
 trait PopulationChange {
-  def apply(individuals: Set[Individual]): Set[Individual]
+  def apply(individuals: Seq[Individual]): Seq[Individual]
 }
 
 case class Turbidostat(k4: Double
                        , k5: Double
                       ) extends PopulationChange {
 
-  override def apply(individuals: Set[Individual]): Set[Individual] = {
+  override def apply(individuals: Seq[Individual]): Seq[Individual] = {
     val actualSize = individuals.size
     val survivalProbability = Math.max(0.1, 1.0 - k4 * actualSize * actualSize + k5)
 
@@ -48,7 +48,7 @@ object Turbidostat {
 }
 
 case class DeathByAge(gen: Int) extends PopulationChange {
-  override def apply(individuals: Set[Individual]) = individuals.filter {
+  override def apply(individuals: Seq[Individual]) = individuals.filter {
     individual => individual.birthGeneration >= gen
   }
 }
@@ -58,19 +58,19 @@ object DeathByAge {
 }
 
 case class PanmicticOverlap(optimum: Phenotype)(gen: Int) extends PopulationChange {
-  override def apply(individuals: Set[Individual]) = {
+  override def apply(individuals: Seq[Individual]) = {
     val mate = Individual.mate(gen)(optimum) _
     val pairs = PanmicticOverlap.chosenPairs(individuals)
-    val newBorns = pairs.flatMap(p =>  mate(p._1, p._2))
+    val newBorns = pairs.par.flatMap(p =>  mate(p._1, p._2))
 
     individuals ++ newBorns
   }
 }
 
 object PanmicticOverlap {
-  def chosenPairs(population: Population): Set[(Individual, Individual)] = chosenPairs(population.individuals)
+  def chosenPairs(population: Population): Seq[(Individual, Individual)] = chosenPairs(population.individuals)
 
-  def chosenPairs(individuals: Set[Individual], toChoose: Int = Int.MaxValue): Set[(Individual, Individual)] = {
+  def chosenPairs(individuals: Seq[Individual], toChoose: Int = Int.MaxValue): Seq[(Individual, Individual)] = {
     shuffle(individuals.filter(_.sex == F))
       .zip(shuffle(individuals.filter(_.sex == M)))
       .take(toChoose)
@@ -78,5 +78,5 @@ object PanmicticOverlap {
 }
 
 object AllSurvive extends PopulationChange {
-  override def apply(individuals: Set[Individual]): Set[Individual] = individuals
+  override def apply(individuals: Seq[Individual]): Seq[Individual] = individuals
 }

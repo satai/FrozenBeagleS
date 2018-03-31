@@ -6,7 +6,7 @@ import cz.nekola.frozenbeagle.SimulationConstants.{dimensionCount, fitnessDecrea
 
 import scala.util.Random._
 
-case class Phenotype(components: List[Double]) {
+case class Phenotype(components: Array[Double]) {
   def distance(that: Phenotype): Double =
       sqrt( (this.components, that.components)
              .zipped
@@ -19,14 +19,18 @@ case class Phenotype(components: List[Double]) {
   def +(phenotypeChange: PhenotypeChange): Phenotype = {
     Phenotype (this.components.zip(phenotypeChange.components).map(cs => cs._1 + cs._2))
   }
+
+  override def equals(that: Any): Boolean = that.isInstanceOf[Phenotype] && that.asInstanceOf[Phenotype].components.sameElements(this.components)
 }
 
-case class PhenotypeChange(components: List[Double]) {
+case class PhenotypeChange(components: Array[Double]) {
   override def toString = this.components.mkString("Δ(", ", ", ")")
 
   def +(phenotypeChange: PhenotypeChange): PhenotypeChange = {
     PhenotypeChange (this.components.zip(phenotypeChange.components).map(cs => cs._1 + cs._2))
   }
+
+  override def equals(that: Any): Boolean = that.isInstanceOf[PhenotypeChange] && that.asInstanceOf[PhenotypeChange].components.sameElements(this.components)
 }
 
 object Phenotype {
@@ -39,12 +43,12 @@ object Phenotype {
 }
 
 object PhenotypeChange {
-  def randomPhenotypeChange = PhenotypeChange ((1 to dimensionCount).map(_ => nextGaussian()).toList)
+  def randomPhenotypeChange = PhenotypeChange ((1 to dimensionCount).map(_ => nextGaussian()).toArray)
 
   val zeroPhenotypeChange = PhenotypeChange(zeroPhenotypeVec)
 
   def randomPhenotypeChangeWithOneNonZero = {
     val cs : List[Double] = nextGaussian() :: (for {_ <- 1 until dimensionCount } yield 0.0).toList
-    PhenotypeChange (shuffle(cs))
+    PhenotypeChange (shuffle(cs).toArray)
   }
 }

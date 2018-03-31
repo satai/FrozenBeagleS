@@ -3,7 +3,7 @@ package cz.nekola.frozenbeagle
 object SimulationConstants {
   lazy val dimensionCount: Int = 4
 
-  lazy val zeroPhenotypeVec: List[Double] = List.fill(dimensionCount) (0.0)
+  lazy val zeroPhenotypeVec: Array[Double] = Array.fill(dimensionCount) (0.0)
 
   lazy val optimumChangeGeneration: Int = 8 * 1024
 

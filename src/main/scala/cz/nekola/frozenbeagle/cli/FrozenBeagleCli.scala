@@ -20,20 +20,17 @@ object FrozenBeagleCli {
     val tng = Evolution.step(evolutionRules) _
 
     val initialPopulation = Population( 0
-                                      , (1 to 1024).map(_ => randomIndividual).toSet
+                                      , (1 to 1024).map(_ => randomIndividual)
                                       )
 
     val ts = currentTimeMillis
 
-    val result = (1 to 1024).scanLeft(initialPopulation)((pop, _) => tng(pop))
+    val result = (1 to 1024 * 16).foldLeft(initialPopulation)((pop, _) => tng(pop))
 
     println("Time: " + ((currentTimeMillis - ts) / 1000))
 
-    println(result(1).size)
-    println(result(512).size)
-    println(result(570).size)
-    println(result(1024).size)
-    println(result.last.size)
+    println(result.size)
+    println(result.getClass)
   }
 
 }

@@ -38,9 +38,9 @@ object Individual {
   }
 
   //FIXME missing tests
-  def mate(simulationRound: Int)(optimum: Phenotype) (father: Individual, mother: Individual) : Set[Individual] = {
+  def mate(simulationRound: Int)(optimum: Phenotype) (father: Individual, mother: Individual) : Seq[Individual] = {
     val p1 = fitness(optimum)(father.phenotype)
-    val p2 = fitness(optimum)(father.phenotype)
+    val p2 = fitness(optimum)(mother.phenotype)
 
     val avgPairFitness = (p1 + p2) / 2.0
 
@@ -48,9 +48,9 @@ object Individual {
 
     if (nextDouble() <= probabilityToHaveChild) {
       val child = randomOffspring(simulationRound, father, mother)
-      Set(child)
+      Seq(child)
     } else {
-      Set()
+      Seq()
     }
   }
 }

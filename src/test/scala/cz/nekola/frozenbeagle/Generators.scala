@@ -11,7 +11,7 @@ object Generators {
     x2 <- Gen.choose(-10.0, 10.0)
     x3 <- Gen.choose(-10.0, 10.0)
     x4 <- Gen.choose(-10.0, 10.0)
-  } yield Phenotype(List(x1, x2, x3, x4))
+  } yield Phenotype(Array(x1, x2, x3, x4))
 
   implicit lazy val arbPhenotype: Arbitrary[Phenotype] = Arbitrary(genPhenotype)
 
@@ -20,7 +20,7 @@ object Generators {
     x2 <- Gen.choose(-3.0, 3.0)
     x3 <- Gen.choose(-3.0, 3.0)
     x4 <- Gen.choose(-3.0, 3.0)
-  } yield PhenotypeChange(List(x1, x2, x3, x4))
+  } yield PhenotypeChange(Array(x1, x2, x3, x4))
 
   implicit lazy val arbPhenotypeChange: Arbitrary[PhenotypeChange] = Arbitrary(genPhenotypeChange)
 
@@ -39,7 +39,7 @@ object Generators {
     a4  <- arbitrary[Allelle]
     a5  <- arbitrary[Allelle]
 
-  } yield DnaString (List(a1, a2, a3, a4, a5))
+  } yield DnaString (Array(a1, a2, a3, a4, a5))
 
   implicit lazy val arbDnaString: Arbitrary[DnaString] = Arbitrary(genDnaString)
 
@@ -54,7 +54,7 @@ object Generators {
   implicit lazy val arbIndividual: Arbitrary[Individual] = Arbitrary(genIndividual)
 
   lazy val genPopulation: Gen[Population] = for {
-    individuals <- arbitrary[Set[Individual]]
+    individuals <- arbitrary[Seq[Individual]]
     generation <- Gen.choose(0,100)
   } yield Population(generation, individuals)
 

@@ -15,7 +15,7 @@ import org.apache.commons.math3.util.Precision
 class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
 
-  def aboutTheSame(r1: List[Double], r2: List[Double]) = {
+  def aboutTheSame(r1: Array[Double], r2: Array[Double]) = {
     r1.zip(r2).forall { x: (Double, Double) => Precision.equalsWithRelativeTolerance(x._1, x._2, 0.001) }
   }
 
@@ -23,12 +23,12 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
     describe("Distance") {
       it("is euclidean one by example") {
-        Phenotype(List(-1.0, 0.0, 0.0, 0.0)) distance Phenotype(List(0.0, 1.0, 0.0, 0.0)) should
+        Phenotype(Array(-1.0, 0.0, 0.0, 0.0)) distance Phenotype(Array(0.0, 1.0, 0.0, 0.0)) should
           equal(sqrt(2))
       }
 
       it("is euclidean one by an other example") {
-        Phenotype(List(2.0, 0.0, 0.0, 0.0)) distance Phenotype(List(0.0, 2.0, 2.0, -2.0)) should
+        Phenotype(Array(2.0, 0.0, 0.0, 0.0)) distance Phenotype(Array(0.0, 2.0, 2.0, -2.0)) should
           equal(4)
       }
 
@@ -57,7 +57,7 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
     describe("string representation") {
       it("looks like (1.0, 2.0, -0.3)") {
         "(1.0, 2.0, -0.3)" should equal(
-          Phenotype(List(1.0, 2.0, -0.3)).toString
+          Phenotype(Array(1.0, 2.0, -0.3)).toString
         )
       }
     }
@@ -93,7 +93,7 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
       it("to apply a change to a zeroPhenotype creates a phenotype with the same elements as the phenotype change") {
         check {
-          (pc: PhenotypeChange) => (zeroPhenotype + pc).components == pc.components
+          (pc: PhenotypeChange) => (zeroPhenotype + pc).components sameElements pc.components
         }
       }
     }
@@ -114,7 +114,7 @@ class PhenotypeSpec extends FunSpec with Matchers with Checkers {
 
       it("to apply a change to a zeroPhenotypeChange creates a phenotype change with the same elements as the phenotype change") {
         check {
-          (pc: PhenotypeChange) => (zeroPhenotypeChange + pc).components == pc.components
+          (pc: PhenotypeChange) => (zeroPhenotypeChange + pc).components sameElements pc.components
         }
       }
     }
