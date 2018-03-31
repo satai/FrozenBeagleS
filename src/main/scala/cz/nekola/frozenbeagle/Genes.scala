@@ -21,7 +21,7 @@ case class Allelle ( effect: PhenotypeChange
 
 object Allelle {
 
- def randomAllelle = {
+ def randomAllelle: Allelle = {
     Allelle(randomPhenotypeChange, randomPhenotypeChange) //FIXME
   }
 }

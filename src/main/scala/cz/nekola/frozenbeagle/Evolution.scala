@@ -1,5 +1,7 @@
 package cz.nekola.frozenbeagle
 
+import cz.nekola.frozenbeagle.cli.Naturalist
+
 case class EvolutionRules(populationChanges: Array[Int => PopulationChange]) extends AnyVal
 
 
