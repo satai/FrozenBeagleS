@@ -15,6 +15,31 @@ class NaturalistsSpec extends FunSpec with Matchers with Checkers {
       }
     }
 
+    it ("writes te right generation into the result notebook") {
+      check {
+        p: Population =>
+          val notebook = Demograph.observe(p)
+          notebook("generation").toInt == p.generation
+      }
+    }
+
+
+    it ("writes te right population size into result notebook") {
+      check {
+        p: Population =>
+          val notebook = Demograph.observe(p)
+          notebook("populationSize").toInt == p.individuals.size
+      }
+    }
+
+    it ("population size is male count plus female count") {
+      check {
+        p: Population =>
+          val notebook = Demograph.observe(p)
+          notebook("populationSize").toInt == notebook("maleCount").toInt + notebook("femaleCount").toInt
+      }
+    }
   }
+
 
 }
