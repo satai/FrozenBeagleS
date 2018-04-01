@@ -1,6 +1,6 @@
 package cz.nekola.frozenbeagle
 
-import cz.nekola.frozenbeagle.cli.Naturalist
+import scala.util.Random
 
 case class EvolutionRules(populationChanges: Array[Int => PopulationChange]) extends AnyVal
 
@@ -8,11 +8,14 @@ case class EvolutionRules(populationChanges: Array[Int => PopulationChange]) ext
 //FIXME test it
 object EvolutionRules {
 
-  def optimumForGen(gen: Int) =
-    if (gen < 512) Phenotype(Array(0.0, 4.2, -16, 0.1))
-    else Phenotype(Array(-5, 12, -2, 9))
+  val firstOptimum = Phenotype ((1 to SimulationConstants.dimensionCount).map(_ => 12 * Random.nextGaussian()).toArray)
+  val optimumChange = PhenotypeChange ((1 to SimulationConstants.dimensionCount).map(_ => 12 * Random.nextGaussian()).toArray)
 
-  def apply(maximumAge: Int
+  def optimumForGen(gen: Int): Phenotype =
+    if (gen < 512) firstOptimum
+    else firstOptimum + optimumChange
+
+  def apply( maximumAge: Int
            , populationSize: Int
            ): EvolutionRules = {
     new EvolutionRules(Array(
