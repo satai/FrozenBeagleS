@@ -1,6 +1,4 @@
-package cz.nekola.frozenbeagle.cli
-
-import cz.nekola.frozenbeagle.Population
+package cz.nekola.frozenbeagle
 
 trait Naturalist {
   def observe(population: Population): Map[String, Double]
