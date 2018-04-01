@@ -1,6 +1,6 @@
 package cz.nekola.frozenbeagle
 
-import cz.nekola.frozenbeagle.PhenotypeChange.randomPhenotypeChange
+import cz.nekola.frozenbeagle.PhenotypeChange.randomPhenotypeChangeWithOneNonZero
 import cz.nekola.frozenbeagle.SimulationConstants.probabilityAlleleMutation
 
 import scala.util.Random
@@ -22,7 +22,8 @@ case class Allelle ( effect: PhenotypeChange
 object Allelle {
 
  def randomAllelle: Allelle = {
-    Allelle(randomPhenotypeChange, randomPhenotypeChange) //FIXME
+   val pc = randomPhenotypeChangeWithOneNonZero
+   Allelle(pc, pc) //FIXME
   }
 }
 
