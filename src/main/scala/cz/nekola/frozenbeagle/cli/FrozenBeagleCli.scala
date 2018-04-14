@@ -3,6 +3,7 @@ package cz.nekola.frozenbeagle.cli
 import java.lang.System.currentTimeMillis
 
 import cz.nekola.frozenbeagle.DnaString.randomDnaString
+import cz.nekola.frozenbeagle.SimulationConstants.{epochCount, epochLength}
 import cz.nekola.frozenbeagle._
 
 import scala.util.Random
