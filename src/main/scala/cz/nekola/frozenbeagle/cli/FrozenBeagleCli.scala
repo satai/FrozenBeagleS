@@ -14,7 +14,7 @@ object FrozenBeagleCli {
 
   def newAllelle( pleiProbability: Double
                 , negDominanceProbability: Double
-                ): Allelle = {
+  ): Allelle = {
     val pc1 = if (Random.nextDouble() < pleiProbability) {
       PhenotypeChange.randomPhenotypeChange
     } else {
