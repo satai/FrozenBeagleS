@@ -5,9 +5,9 @@ object SimulationConstants {
 
   lazy val zeroPhenotypeVec: Array[Double] = Array.fill(dimensionCount) (0.0)
 
-  lazy val optimumChangeGeneration: Int = 8 * 1024
+  lazy val epochLength: Int = 8 * 1024
 
-  lazy val maxSteps: Int = 3 * optimumChangeGeneration
+  lazy val epochCount: Int = 8
 
   lazy val accidentDeathProbability: Double = 0.0
 

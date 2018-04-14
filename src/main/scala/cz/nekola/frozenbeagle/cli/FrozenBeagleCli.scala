@@ -65,7 +65,7 @@ object FrozenBeagleCli {
     val tng = Evolution.step(evolutionRules) _
 
     val initialPopulation = Population( 0
-                                      , (1 to 1024).map(_ => randomIndividual(pleiProbability, negDominanceProbability))
+                                      , (1 to epochLength * epochCount).map(_ => randomIndividual(pleiProbability, negDominanceProbability))
                                       )
 
     val ts = currentTimeMillis
