@@ -26,20 +26,20 @@ class GenesSpec extends FunSpec with Matchers with Checkers {
     it ("mutated DNA has same length as dna before mutation") {
       check {
         (dna: DnaString) =>
-          dna.genes.length == dna.mutate.genes.length
+          dna.genes.length == dna.mutate(Allelle.randomAllelle).genes.length
       }
     }
 
     it ("mutated DNAs sometimes differ from original DNAs") {
       val dnas = (1 to 40000).map{_ => genDnaString}.map{it => it.sample.get}
-      val mutated = dnas.map(it => it.mutate)
+      val mutated = dnas.map(it => it.mutate(Allelle.randomAllelle))
 
       (dnas.toSet.diff(mutated.toSet).size > 3) should be(true)
     }
 
     it ("mutated DNAs usually doesn't differ from original DNAs") {
       val dnas = (1 to 10000).map{_ => genDnaString}.map{it => it.sample.get}
-      val mutated = dnas.map(it => it.mutate)
+      val mutated = dnas.map(it => it.mutate(Allelle.randomAllelle))
 
       (dnas.toSet.diff(mutated.toSet).size < 3000) should be(true)
     }

@@ -17,11 +17,14 @@ object EvolutionRules {
 
   def apply( maximumAge: Int
            , populationSize: Int
+           , mutationProbability: Double
+           , newAllelleFactory: => Allelle
            ): EvolutionRules = {
     new EvolutionRules(Array(
       gen => PanmicticOverlap(optimumForGen(gen))(gen)
     , _   => Turbidostat(populationSize, 0.0, maximumAge)
     , gen => DeathByAge(maximumAge, gen)
+    , _   => Mutations(mutationProbability, newAllelleFactory)
     ))
   }
 }

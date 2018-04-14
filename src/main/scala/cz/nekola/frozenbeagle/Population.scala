@@ -53,8 +53,29 @@ case class DeathByAge(gen: Int) extends PopulationChange {
   }
 }
 
+
+class Mutations( val mutationProbability: Double
+               , newAllelleFactory: => Allelle) extends PopulationChange {
+
+  override def apply(individuals: Seq[Individual]) = individuals.map {
+    individual =>
+      val originalChromosomes = individual.chromosomes
+      individual.copy(
+          chromosomes = ( originalChromosomes._1.mutate(newAllelleFactory)
+                        , originalChromosomes._2.mutate(newAllelleFactory)
+                        )
+      )
+  }
+}
+
 object DeathByAge {
   def apply(maxAge: Int, actualGeneration: Int) = new DeathByAge(actualGeneration - maxAge)
+}
+
+object Mutations {
+  def apply( mutationProbability: Double
+           , newAllelleFactory:  => Allelle
+           ) = new Mutations(mutationProbability, newAllelleFactory)
 }
 
 case class PanmicticOverlap(optimum: Phenotype)(gen: Int) extends PopulationChange {

@@ -8,9 +8,9 @@ import scala.util.Random
 case class Allelle ( effect: PhenotypeChange
                    , dominantEffect: PhenotypeChange
                    ) {
-  def mutate: Allelle =
+  def mutate(newAllelleFactory: => Allelle): Allelle =
     if (Random.nextDouble() < probabilityAlleleMutation) {
-        Allelle.randomAllelle
+        newAllelleFactory
     } else {
         this
     }
@@ -28,7 +28,7 @@ object Allelle {
 }
 
 case class DnaString (genes: Array[Allelle]) {
-  def mutate = DnaString (this.genes.map{_.mutate})
+  def mutate(newAllelleFactory: => Allelle) = DnaString (this.genes.map{_.mutate(newAllelleFactory)})
 
   def randomPoint: Int = Random.nextInt(this.genes.length - 2) + 1
 
@@ -45,5 +45,5 @@ object DnaString {
     def crossoverWithPoint(crossoverPoint: Int, dna1: DnaString, dna2: DnaString): DnaString =
         DnaString(dna1.genes.take(crossoverPoint) ++ dna2.genes.drop(crossoverPoint))
 
-    def randomDnaString = DnaString ((1 to 32).map(_ => Allelle.randomAllelle).toArray)
+    def randomDnaString(randomAllelle: => Allelle) = DnaString ((1 to 32).map(_ => randomAllelle).toArray)
 }
