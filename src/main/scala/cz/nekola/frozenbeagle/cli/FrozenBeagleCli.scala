@@ -10,6 +10,8 @@ import scala.util.Random
 
 object FrozenBeagleCli {
 
+  val paretoDistribution = new org.apache.commons.math3.distribution.ParetoDistribution(1.5, 1.5)
+
   def newAllelle( pleiProbability: Double
                 , negDominanceProbability: Double
                 ): Allelle = {
@@ -20,7 +22,8 @@ object FrozenBeagleCli {
     }
 
     val pc2 = if (Random.nextDouble() < negDominanceProbability) {
-      PhenotypeChange (pc1.components.map(_ * (-3)))  //FIXME coeficient
+      val coefficient = paretoDistribution.sample()
+      PhenotypeChange (pc1.components.map(_ * (- coefficient)))
     } else {
       pc1
     }
