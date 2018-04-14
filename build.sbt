@@ -10,5 +10,6 @@ libraryDependencies += "com.github.haifengl" % "smile-core" % "1.5.0"
 
 libraryDependencies += "com.typesafe.play" %% "play-json" % "2.6.7"
 libraryDependencies += "org.apache.commons" % "commons-math3" % "3.6.1"
+libraryDependencies += "org.rogach" %% "scallop" % "3.1.2"
 
 libraryDependencies += "org.slf4j" % "slf4j-log4j12" % "1.7.0"

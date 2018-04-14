@@ -5,6 +5,7 @@ import java.lang.System.currentTimeMillis
 import cz.nekola.frozenbeagle.DnaString.randomDnaString
 import cz.nekola.frozenbeagle.SimulationConstants.{epochCount, epochLength}
 import cz.nekola.frozenbeagle._
+import org.rogach.scallop.ScallopConf
 
 import scala.util.Random
 
@@ -21,7 +22,6 @@ object FrozenBeagleCli {
     } else {
       PhenotypeChange.randomPhenotypeChangeWithOneNonZero
     }
-
     val pc2 = if (Random.nextDouble() < negDominanceProbability) {
       val coefficient = paretoDistribution.sample()
       PhenotypeChange (pc1.components.map(_ * (- coefficient)))
@@ -53,25 +53,68 @@ object FrozenBeagleCli {
         }
   )
 
+  case class Params(arguments: Seq[String]) extends ScallopConf(arguments) {
+    val populationSize = opt[Int] (
+        required = true
+      , descr = "Size of initial population and the size of population, that is equlibrium for turbidostat."
+      , noshort = true
+      )
+
+    val countOfBases = opt[Int](
+        required = true
+      , descr = "DNA string length (count of allellas)."
+      , noshort = true
+      )
+
+    val ratioOfNegativeDominantRules = opt[Int](
+        required = true
+      , descr = "Ratio of negative dominant allelas as they appear in the initial population and as they are created by mutations "
+      , noshort = true
+      )
+
+    val ratioOfPleiotropicRules = opt[Int](
+        required = true
+      , descr = "Ratio of allellas that affect multiple dimensions of the phenotype. This ratio is in the initial population and in this ratio new allellas are created by mutation."
+      , noshort = true
+      )
+
+    val maximumAge = opt[Int](
+        required = true
+      , descr = "After this age organisms die by age."
+      , noshort = true
+    )
+
+    val mutationProbability = opt[Int](
+      required = true
+      , descr = "FIXME"
+      , noshort = true
+    )
+
+    verify()
+  }
+
   def main(args: Array[String]): Unit = {
-    val pleiProbability = 0.1
-    val negDominanceProbability = 0.45
+
+    val params = Params(Array("--help"))
 
     val evolutionRules = EvolutionRules(
-         maximumAge = 64
-       , populationSize = 1024
-       , mutationProbability = 0.0001
-       , newAllelleFactory = newAllelle(pleiProbability, negDominanceProbability )
+         maximumAge = params.maximumAge()
+       , populationSize = params.populationSize()
+       , mutationProbability = params.mutationProbability()
+       , newAllelleFactory = newAllelle(
+           params.ratioOfPleiotropicRules()
+         , params.ratioOfNegativeDominantRules()
+         )
        )
     val tng = Evolution.step(evolutionRules) _
 
     val initialPopulation = Population( 0
-                                      , (1 to epochLength * epochCount).map(_ => randomIndividual(pleiProbability, negDominanceProbability))
+                                      , (1 to epochLength * epochCount).map(_ => randomIndividual(params.ratioOfPleiotropicRules(), params.ratioOfNegativeDominantRules()))
                                       )
 
     val ts = currentTimeMillis
 
-    val result = (1 to 1024 * 64).toStream.scanLeft(initialPopulation)((pop, _) => tng(pop)).map(notes)
+    val result = (1 to epochCount * epochLength).toStream.scanLeft(initialPopulation)((pop, _) => tng(pop)).map(notes)
 
     import play.api.libs.json._
     println(Json.prettyPrint(Json.toJson(result)))
