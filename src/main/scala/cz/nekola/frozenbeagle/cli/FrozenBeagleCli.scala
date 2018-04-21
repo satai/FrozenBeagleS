@@ -7,6 +7,7 @@ import cz.nekola.frozenbeagle.SimulationConstants.{epochCount, epochLength}
 import cz.nekola.frozenbeagle._
 import org.rogach.scallop.ScallopConf
 
+import scala.collection.immutable
 import scala.util.Random
 
 
@@ -54,6 +55,12 @@ object FrozenBeagleCli {
   )
 
   case class Params(arguments: Seq[String]) extends ScallopConf(arguments) {
+    val simulationCount = opt[Int] (
+        required = true
+      , descr = "Number of simulations to run with given set of parameters."
+      , noshort = true
+      )
+
     val populationSize = opt[Int] (
         required = true
       , descr = "Size of initial population and the size of population, that is equlibrium for turbidostat."
@@ -108,21 +115,23 @@ object FrozenBeagleCli {
        )
     val tng = Evolution.step(evolutionRules) _
 
-    val initialPopulation = Population( 0
-                                      , (1 to epochLength * epochCount).map(_ => randomIndividual(params.ratioOfPleiotropicRules(), params.ratioOfNegativeDominantRules()))
-                                      )
-
     val ts = currentTimeMillis
 
-    val result = (1 to epochCount * epochLength).toStream.scanLeft(initialPopulation)((pop, _) => tng(pop)).map(notes)
+    val results = (1 to params.simulationCount()).map {
+      _ =>
+        val initialPopulation = Population( 0
+        , (1 to epochLength * epochCount).map(_ => randomIndividual(params.ratioOfPleiotropicRules(), params.ratioOfNegativeDominantRules()))
+        )
+
+        (1 to epochCount * epochLength).toStream.scanLeft(initialPopulation)((pop, _) => tng(pop)).map(notes)
+    }
 
     import play.api.libs.json._
-    println(Json.prettyPrint(Json.toJson(result)))
+    println(Json.prettyPrint(Json.toJson(results)))
 
-    println(result.size)
-    println(result.head)
-    println(result.last)
-    println(result.getClass)
+    println(results.size)
+    println(results.head.head)
+    println(results.head.last)
     println("Time: " + ((currentTimeMillis - ts) / 1000))
   }
 
