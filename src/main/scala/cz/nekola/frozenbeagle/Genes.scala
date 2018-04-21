@@ -1,6 +1,5 @@
 package cz.nekola.frozenbeagle
 
-import cz.nekola.frozenbeagle.PhenotypeChange.randomPhenotypeChangeWithOneNonZero
 import cz.nekola.frozenbeagle.SimulationConstants.probabilityAlleleMutation
 
 import scala.util.Random
@@ -21,7 +20,6 @@ case class Allelle ( effect: PhenotypeChange
 
 object Allelle {
 
- def randomAllelle: Allelle = {
    val paretoDistribution = new org.apache.commons.math3.distribution.ParetoDistribution(1.5, 1.5)
 
    def newAllelle(pleiProbability: Double
@@ -42,7 +40,6 @@ object Allelle {
      Allelle(pc1, pc2)
    }
 
- }
 
 }
 
