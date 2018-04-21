@@ -37,7 +37,7 @@ object FrozenBeagleCli {
 
   def main(args: Array[String]): Unit = {
 
-    val params = Params(Array("--help"))
+    val params = Params(args)
 
     val evolutionRules = EvolutionRules(
          maximumAge = params.maximumAge()
