@@ -41,7 +41,7 @@ case class Params(arguments: Seq[String]) extends ScallopConf(arguments) {
 
   val mutationProbability = opt[Int](
     required = true
-    , descr = "FIXME"
+    , descr = "Probability, that a allelle is mutated during one round of simulation"
     , noshort = true
   )
 
