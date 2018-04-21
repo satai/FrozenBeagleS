@@ -22,8 +22,6 @@ case class Allelle ( effect: PhenotypeChange
 object Allelle {
 
  def randomAllelle: Allelle = {
-   val pc = randomPhenotypeChangeWithOneNonZero
-   Allelle(pc, pc) //FIXME
    val paretoDistribution = new org.apache.commons.math3.distribution.ParetoDistribution(1.5, 1.5)
 
    def newAllelle(pleiProbability: Double
