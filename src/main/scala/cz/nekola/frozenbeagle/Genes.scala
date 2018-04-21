@@ -24,7 +24,26 @@ object Allelle {
  def randomAllelle: Allelle = {
    val pc = randomPhenotypeChangeWithOneNonZero
    Allelle(pc, pc) //FIXME
+  val paretoDistribution = new org.apache.commons.math3.distribution.ParetoDistribution(1.5, 1.5)
+
+  def newAllelle( pleiProbability: Double
+                , negDominanceProbability: Double
+  ): Allelle = {
+    val pc1 = if (Random.nextDouble() < pleiProbability) {
+      PhenotypeChange.randomPhenotypeChange
+    } else {
+      PhenotypeChange.randomPhenotypeChangeWithOneNonZero
+    }
+    val pc2 = if (Random.nextDouble() < negDominanceProbability) {
+      val coefficient = paretoDistribution.sample()
+      PhenotypeChange (pc1.components.map(_ * (- coefficient)))
+    } else {
+      pc1
+    }
+
+    Allelle (pc1, pc2)
   }
+
 }
 
 case class DnaString (genes: Array[Allelle]) {

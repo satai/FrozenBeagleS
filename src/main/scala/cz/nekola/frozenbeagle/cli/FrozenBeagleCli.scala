@@ -11,25 +11,8 @@ import scala.util.Random
 
 object FrozenBeagleCli {
 
-  val paretoDistribution = new org.apache.commons.math3.distribution.ParetoDistribution(1.5, 1.5)
 
-  def newAllelle( pleiProbability: Double
-                , negDominanceProbability: Double
-  ): Allelle = {
-    val pc1 = if (Random.nextDouble() < pleiProbability) {
-      PhenotypeChange.randomPhenotypeChange
-    } else {
-      PhenotypeChange.randomPhenotypeChangeWithOneNonZero
-    }
-    val pc2 = if (Random.nextDouble() < negDominanceProbability) {
-      val coefficient = paretoDistribution.sample()
-      PhenotypeChange (pc1.components.map(_ * (- coefficient)))
-    } else {
-      pc1
-    }
 
-    Allelle (pc1, pc2)
-  }
 
   val naturalists: Seq[Naturalist]= Seq(Demograph)
 
@@ -38,8 +21,8 @@ object FrozenBeagleCli {
                       ): Individual = Individual(
       sex = if (Random.nextBoolean()) F else M
     , birthGeneration = 0
-    , chromosomes = ( randomDnaString( newAllelle(pleiProbability, negDominanceProbability))
-                    , randomDnaString( newAllelle(pleiProbability, negDominanceProbability))
+    , chromosomes = ( randomDnaString( Allelle.newAllelle(pleiProbability, negDominanceProbability))
+                    , randomDnaString( Allelle.newAllelle(pleiProbability, negDominanceProbability))
                     )
     )
 
@@ -60,7 +43,7 @@ object FrozenBeagleCli {
          maximumAge = params.maximumAge()
        , populationSize = params.populationSize()
        , mutationProbability = params.mutationProbability()
-       , newAllelleFactory = newAllelle(
+       , newAllelleFactory = Allelle.newAllelle(
            params.ratioOfPleiotropicRules()
          , params.ratioOfNegativeDominantRules()
          )
