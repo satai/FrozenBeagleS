@@ -15,3 +15,16 @@ object Demograph extends Naturalist {
 }
 
 
+object Naturalists {
+
+  def notes(naturalists: Seq[Naturalist])(population: Population): Map[String, Double] = {
+    naturalists.map(naturalist => naturalist.observe(population))
+      .foldLeft(Map[String, Double]())(
+        (a: Map[String, Double], b: Map[String, Double]) => {
+          assert(a.keySet.intersect(b.keySet).isEmpty, "Two naturalists should not share a key " + a.keySet.intersect(b.keySet))
+          a ++ b
+        }
+      )
+  }
+}
+

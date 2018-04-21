@@ -3,6 +3,7 @@ package cz.nekola.frozenbeagle.cli
 import java.lang.System.currentTimeMillis
 
 import cz.nekola.frozenbeagle.DnaString.randomDnaString
+import cz.nekola.frozenbeagle.Naturalists.notes
 import cz.nekola.frozenbeagle.SimulationConstants.{epochCount, epochLength}
 import cz.nekola.frozenbeagle._
 
@@ -25,15 +26,6 @@ object FrozenBeagleCli {
                     , randomDnaString( Allelle.newAllelle(pleiProbability, negDominanceProbability))
                     )
     )
-
-  def notes(population: Population): Map[String, Double] =
-    naturalists.map(naturalist => naturalist.observe(population))
-               .foldLeft(Map[String, Double]())(
-        (a: Map[String, Double], b: Map[String, Double]) => {
-          assert(a.keySet.intersect(b.keySet).isEmpty, "Two naturalists should not share a key " + a.keySet.intersect(b.keySet))
-          a ++ b
-        }
-  )
 
   def main(args: Array[String]): Unit = {
 
@@ -58,7 +50,9 @@ object FrozenBeagleCli {
         , (1 to epochLength * epochCount).map(_ => randomIndividual(params.ratioOfPleiotropicRules(), params.ratioOfNegativeDominantRules()))
         )
 
-        (1 to epochCount * epochLength).toStream.scanLeft(initialPopulation)((pop, _) => tng(pop)).map(notes)
+        (1 to epochCount * epochLength).toStream
+          .scanLeft(initialPopulation){(pop, _) => tng(pop)}
+          .map(notes(naturalists))
     }
 
     import play.api.libs.json._
