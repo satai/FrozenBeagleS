@@ -10,20 +10,23 @@ case class EvolutionRules(populationChanges: Array[Int => PopulationChange]) ext
 //FIXME test it
 object EvolutionRules {
 
-  val firstOptimum = Phenotype ((1 to SimulationConstants.dimensionCount).map(_ => optimumSizeCoefficient * Random.nextGaussian()).toArray)
-  val optimumChange = PhenotypeChange ((1 to SimulationConstants.dimensionCount).map(_ => optimumChangeSizeCoefficient * Random.nextGaussian()).toArray)
-
-  def optimumForGen(gen: Int): Phenotype = {
-    val era: Int = gen / epochLength
-    if (0 == era % 2 ) firstOptimum
-    else firstOptimum + optimumChange
-  }
 
   def apply( maximumAge: Int
            , populationSize: Int
            , mutationProbability: Double
            , newAllelleFactory: => Allelle
            ): EvolutionRules = {
+
+    val firstOptimum = Phenotype ((1 to SimulationConstants.dimensionCount).map(_ => optimumSizeCoefficient * Random.nextGaussian()).toArray)
+    val optimumChange = PhenotypeChange ((1 to SimulationConstants.dimensionCount).map(_ => optimumChangeSizeCoefficient * Random.nextGaussian()).toArray)
+    val secondOptimum = firstOptimum + optimumChange
+
+    def optimumForGen(gen: Int): Phenotype = {
+      val era: Int = gen / epochLength
+      if (0 == era % 2 ) firstOptimum
+      else secondOptimum
+    }
+
     new EvolutionRules(Array(
       gen => PanmicticOverlap(optimumForGen(gen))(gen)
     , _   => Turbidostat(populationSize, 0.0, maximumAge)
