@@ -21,13 +21,13 @@ case class Params(arguments: Seq[String]) extends ScallopConf(arguments) {
     , noshort = true
   )
 
-  val ratioOfNegativeDominantRules = opt[Int](
+  val ratioOfNegativeDominantRules = opt[Double](
     required = true
     , descr = "Ratio of negative dominant allelas as they appear in the initial population and as they are created by mutations "
     , noshort = true
   )
 
-  val ratioOfPleiotropicRules = opt[Int](
+  val ratioOfPleiotropicRules = opt[Double](
     required = true
     , descr = "Ratio of allellas that affect multiple dimensions of the phenotype. This ratio is in the initial population and in this ratio new allellas are created by mutation."
     , noshort = true
@@ -39,7 +39,7 @@ case class Params(arguments: Seq[String]) extends ScallopConf(arguments) {
     , noshort = true
   )
 
-  val mutationProbability = opt[Int](
+  val mutationProbability = opt[Double](
     required = true
     , descr = "Probability, that a allelle is mutated during one round of simulation"
     , noshort = true

@@ -82,7 +82,7 @@ case class PanmicticOverlap(optimum: Phenotype)(gen: Int) extends PopulationChan
   override def apply(individuals: Seq[Individual]) = {
     val mate = Individual.mate(gen)(optimum) _
     val pairs = PanmicticOverlap.chosenPairs(individuals)
-    val newBorns = pairs.par.flatMap(p =>  mate(p._1, p._2))
+    val newBorns = pairs.flatMap(p =>  mate(p._1, p._2))
 
     individuals ++ newBorns
   }

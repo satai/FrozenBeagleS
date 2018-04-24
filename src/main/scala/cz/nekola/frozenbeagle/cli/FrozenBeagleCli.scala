@@ -12,9 +12,6 @@ import scala.util.Random
 
 object FrozenBeagleCli {
 
-
-
-
   val naturalists: Seq[Naturalist]= Seq(Demograph)
 
   def randomIndividual( pleiProbability: Double
@@ -31,37 +28,47 @@ object FrozenBeagleCli {
 
     val params = Params(args)
 
-    val evolutionRules = EvolutionRules(
-         maximumAge = params.maximumAge()
-       , populationSize = params.populationSize()
-       , mutationProbability = params.mutationProbability()
-       , newAllelleFactory = Allelle.newAllelle(
-           params.ratioOfPleiotropicRules()
-         , params.ratioOfNegativeDominantRules()
-         )
-       )
-    val tng = Evolution.step(evolutionRules) _
 
     val ts = currentTimeMillis
 
-    val results = (1 to params.simulationCount()).map {
+    val results = (1 to params.simulationCount()).toParArray.map {
       _ =>
-        val initialPopulation = Population( 0
-        , (1 to epochLength * epochCount).map(_ => randomIndividual(params.ratioOfPleiotropicRules(), params.ratioOfNegativeDominantRules()))
+
+        val evolutionRules = EvolutionRules(
+          maximumAge = params.maximumAge()
+          , populationSize = params.populationSize()
+          , mutationProbability = params.mutationProbability()
+          , newAllelleFactory = Allelle.newAllelle(
+              params.ratioOfPleiotropicRules()
+            , params.ratioOfNegativeDominantRules()
+          )
         )
+
+        val tng = Evolution.step(evolutionRules) _
+
+        val initialPopulation = Population(
+              0
+           , (1 to params.populationSize()).map(
+               _ => randomIndividual(params.ratioOfPleiotropicRules(), params.ratioOfNegativeDominantRules())
+             )
+           )
 
         (1 to epochCount * epochLength).toStream
           .scanLeft(initialPopulation){(pop, _) => tng(pop)}
-          .map(notes(naturalists))
+          .filter(pop => pop.generation % 100 == 0)
+          .map(notes(naturalists)(_))
+          .toSeq
     }
 
-    import play.api.libs.json._
-    println(Json.prettyPrint(Json.toJson(results)))
 
-    println(results.size)
-    println(results.head.head)
-    println(results.head.last)
-    println("Time: " + ((currentTimeMillis - ts) / 1000))
+    results.map(
+        r => println(s"${r.head} ${r(246)} ${r.last}")
+    )
+
+    println(currentTimeMillis - ts)
+
+    import play.api.libs.json._
+
   }
 
 }
