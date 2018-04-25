@@ -57,7 +57,6 @@ object FrozenBeagleCli {
           .scanLeft(initialPopulation){(pop, _) => tng(pop)}
           .filter(pop => pop.generation % 100 == 0)
           .map(notes(naturalists)(_))
-          .toSeq
     }
 
 
