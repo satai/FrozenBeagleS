@@ -1,6 +1,7 @@
 package cz.nekola.frozenbeagle.cli
 
 import java.lang.System.currentTimeMillis
+import java.text.SimpleDateFormat
 
 import cz.nekola.frozenbeagle.DnaString.randomDnaString
 import cz.nekola.frozenbeagle.Naturalists.notes
@@ -67,6 +68,19 @@ object FrozenBeagleCli {
     println(currentTimeMillis - ts)
 
     import play.api.libs.json._
+
+    implicit val paramsWrites: OWrites[Params] = Json.writes[Params]
+    implicit val resultWrites: OWrites[Result] = Json.writes[Result]
+
+    val output = Result(
+        results.toArray.toSeq
+      , params
+      , ((currentTimeMillis - ts) / 1000).asInstanceOf[Double]
+      , new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(ts)
+    )
+
+
+    println(Json.prettyPrint(Json.toJson(output)))
 
   }
 
