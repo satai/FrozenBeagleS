@@ -16,7 +16,6 @@ object Demograph extends Naturalist {
 
 
 object Naturalists {
-
   def notes(naturalists: Seq[Naturalist])(population: Population): Map[String, Double] = {
     naturalists.map(naturalist => naturalist.observe(population))
       .foldLeft(Map[String, Double]())(
