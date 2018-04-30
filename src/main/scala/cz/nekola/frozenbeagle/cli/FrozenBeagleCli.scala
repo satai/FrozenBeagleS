@@ -46,10 +46,10 @@ object FrozenBeagleCli {
       , populationSize = params.populationSize()
       , mutationProbability = params.mutationProbability()
       , newAllelleFactory = Allelle.newAllelle(
-        params.ratioOfPleiotropicRules()
+          params.ratioOfPleiotropicRules()
         , params.ratioOfNegativeDominantRules()
+        )
       )
-    )
 
     val tng = Evolution.step(evolutionRules) _
 
@@ -77,7 +77,7 @@ object FrozenBeagleCli {
       , duration.asInstanceOf[Double]
       , new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(ts)
     )
-    
+
     println(Json.prettyPrint(Json.toJson(output)))
   }
 }
